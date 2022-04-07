@@ -25,5 +25,5 @@ Fit errors-in-variables models with JAGS
 }
 \examples{
 dat <- sim_reg(n_sim = 30)
-run_mod(dat, model = "model_eiv_reg")
+mod <- run_mod(dat, model = "model_eiv_reg")
 }

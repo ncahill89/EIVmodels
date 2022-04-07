@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' dat <- sim_reg(n_sim = 30)
-#' run_mod(dat, model = "model_eiv_reg")
+#' mod <- run_mod(dat, model = "model_eiv_reg")
 run_mod <- function(dat,
                     model = "model_eiv_reg",
                     iter = 15000,
