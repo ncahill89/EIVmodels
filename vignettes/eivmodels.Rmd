@@ -13,7 +13,7 @@ The goal of EIVmodels is to fit models accounting for measurement error.
 
 ## Setup
 
-```{r, eval = FALSE}
+```{r}
 library(EIVmodels)
 ```
 
@@ -21,7 +21,7 @@ library(EIVmodels)
 
 This package provides options to simulate data from different types of models where there is measurement error in both the `x` and `y` variable. We'll start by simulating some data from a linear regression model. 
 
-```{r, eval = FALSE}
+```{r}
 dat <- sim_reg(n_sim = 10,
                alpha = 0,
                beta = 1,
@@ -31,7 +31,34 @@ dat
 
 Next we'll plot the simulated data and we'll add the true regression line to the plot by adding the argument `add_truth = TRUE` to the `plot_dat()` function. 
 
-```{r, eval = FALSE}
+```{r}
 plot_dat(dat,
          add_truth = TRUE)
+```
+
+Now we'll fit the errors-in-variables simple linear regression model to the data and so how close we get to estimating the true data generating process. We'll start by creating a model object. You'll see some messages and a progress bar pop up as the JAGS model starts to run. 
+
+```{r}
+mod_eiv_reg <- run_mod(dat,
+                   model = "model_eiv_reg")
+```
+
+Now we'll plot the model-based estimates with uncertainty. We'll overlay the true line as a comparison. 
+
+```{r, warning=FALSE, message=FALSE}
+plot_res(mod_eiv_reg,
+         add_truth = TRUE)
+```
+
+To access the data that created this plot, use:
+
+```{r}
+mod_reg_res <- par_est(mod = mod_eiv_reg)
+mod_reg_res$pred_res
+```
+
+To access a summary of the parameter estimates, use:
+
+```{r}
+mod_reg_res$par_summary
 ```
