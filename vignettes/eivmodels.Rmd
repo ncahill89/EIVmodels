@@ -1,0 +1,37 @@
+---
+title: "Introduction to EIVmodels"
+description: >
+  Learn how to get started
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to EIVmodels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The goal of EIVmodels is to fit models accounting for measurement error. 
+
+## Setup
+
+```{r, eval = FALSE}
+library(EIVmodels)
+```
+
+## Example 
+
+This package provides options to simulate data from different types of models where there is measurement error in both the `x` and `y` variable. We'll start by simulating some data from a linear regression model. 
+
+```{r, eval = FALSE}
+dat <- sim_reg(n_sim = 10,
+               alpha = 0,
+               beta = 1,
+               x_err = 0.1)
+dat
+```
+
+Next we'll plot the simulated data and we'll add the true regression line to the plot by adding the argument `add_truth = TRUE` to the `plot_dat()` function. 
+
+```{r, eval = FALSE}
+plot_dat(dat,
+         add_truth = TRUE)
+```
