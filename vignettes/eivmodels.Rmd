@@ -17,7 +17,7 @@ The goal of EIVmodels is to fit models accounting for measurement error.
 library(EIVmodels)
 ```
 
-## Example 
+## Example - Simple Linear Regression
 
 This package provides options to simulate data from different types of models where there is measurement error in both the `x` and `y` variable. We'll start by simulating some data from a linear regression model. 
 
@@ -61,4 +61,15 @@ To access a summary of the parameter estimates, use:
 
 ```{r}
 mod_reg_res$par_summary
+```
+
+## Example - Change-Point Linear Regression
+
+```{r}
+dat <- sim_cp(n_sim = 30,
+               alpha = 0,
+               beta = c(1,0.1),
+               cp = 1,
+               x_err = 0.1)
+dat
 ```
