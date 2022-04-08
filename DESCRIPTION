@@ -1,11 +1,13 @@
 Package: EIVmodels
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Fit Errors-in-variables regression model
 Version: 0.1.0
-Author: Niamh Cahill
+Authors@R: c(
+    person("Niamh", "Cahill", , "niamh.cahill@mu.ie", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-3086-550X"))
+  )
 Maintainer: The package maintainer <niamh.cahill@mu.ie>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: You can fit 2 different models assuming an errors-in-variables framework (i.e., account for measurement errors in response and predictor variables)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

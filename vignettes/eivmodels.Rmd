@@ -100,3 +100,13 @@ plot_res(mod_eiv_lr,
          mod_eiv_cp,
          add_truth = TRUE)
 ```
+
+To access the parameter summaries for both model we need to run the `par_est` function
+
+```{r}
+mod_lr_res <- par_est(mod = mod_eiv_reg)
+mod_lr_res$par_summary
+
+mod_cp_res <- par_est(mod = mod_eiv_cp)
+mod_cp_res$par_summary
+```
