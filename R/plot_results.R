@@ -19,15 +19,15 @@ plot_res <- function(mod1,
   ## get model based estimates
   res <- par_est(mod1)
   pred_res <- res$pred_res
-  pred_res$model_label <- "Model"
+  pred_res$model_label <- mod1$model
 
   ### same set up if second model is included
   if (!is.null(mod2)) {
     pred_res1 <- pred_res
     res2 <- par_est(mod2)
     pred_res2 <- res2$pred_res
-    pred_res1$model_label <- "Model1"
-    pred_res2$model_label <- "Model2"
+    pred_res1$model_label <- mod1$model
+    pred_res2$model_label <- mod2$model
     pred_res <- dplyr::full_join(pred_res1, pred_res2)
   }
 
@@ -35,7 +35,6 @@ plot_res <- function(mod1,
   p <- ggplot2::ggplot(pred_res, ggplot2::aes(x = x, y = pred_y)) +
     ggplot2::geom_line(ggplot2::aes(colour = model_label)) +
     ggplot2::geom_ribbon(ggplot2::aes(ymin = lwr_95, ymax = upr_95, fill = model_label), alpha = 0.4) +
-    #ggplot2::geom_point(data = data_to_plot, ggplot2::aes(x = x, y = y), colour = "black", alpha = 0.2) +
     ggplot2::geom_polygon(ggplot2::aes(x = x, y = y, group = obs_index), data = data_to_plot, alpha = 0.2) +
     ggplot2::ylab("Y") +
     ggplot2::xlab("X") +

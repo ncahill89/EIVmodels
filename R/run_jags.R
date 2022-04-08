@@ -5,6 +5,7 @@
 #' @param iter MCMC iterations
 #' @param burnin MCMC burnin
 #' @param thin MCMC thinning
+#' @param scale_factor value to divide the predictor (x) by to change the scale. 1 will result in n0 change. 1000 is recommended if x is years.
 #'
 #' @return List with data, JAGS input data, model output and the name of the model file.
 #' @export
@@ -16,13 +17,14 @@ run_mod <- function(dat,
                     model = "model_eiv_reg",
                     iter = 15000,
                     burnin = 5000,
-                    thin = 5) {
+                    thin = 5,
+                    scale_factor = 1) {
 
   # Simple Linear Regression Model ------------------------------------------
   x<-x_err<- NULL
 
-  dat <- dat %>% dplyr::mutate(x_st = (x-mean(x))/stats::sd(x),
-                               x_err_st = x_err/stats::sd(x))
+  dat <- dat %>% dplyr::mutate(x_st = x/scale_factor,
+                               x_err_st = x_err/scale_factor)
 
   if (model == "model_reg") {
     run_model <-
@@ -333,7 +335,8 @@ model{
     model = model,
     dat = dat,
     sims_list = mod$BUGSoutput$sims.list,
-    jags_data = jags_data
+    jags_data = jags_data,
+    scale_factor = scale_factor
   ))
   }
 
@@ -368,8 +371,8 @@ par_est <- function(mod) {
 
 
     par_dat <- mod$m %>%
-      tidybayes::spread_draws(alpha, beta) %>%
-      tidybayes::median_qi(alpha, beta)
+      tidybayes::gather_draws(alpha, beta,sigma) %>%
+      tidybayes::median_qi()
   }
 
   if (mod$model == "model_cp1" | mod$model == "model_eiv_cp1") {
@@ -387,8 +390,8 @@ par_est <- function(mod) {
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
     par_dat <- mod$m %>%
-      tidybayes::spread_draws(alpha, beta[1:2], cp) %>%
-      tidybayes::median_qi(alpha, beta, cp)
+      tidybayes::gather_draws(alpha, beta[1:2], cp,sigma) %>%
+      tidybayes::median_qi()
   }
 
   if (mod$model == "model_gp" | mod$model == "model_eiv_gp") {
@@ -416,15 +419,15 @@ par_est <- function(mod) {
 
     ### Store results
     pred_res <- tibble::tibble(
-      x = (x_star*stats::sd(mod$dat$x)) + mean(mod$dat$x),
+      x = x_star*mod$scale_factor,
       pred_y = c(pred_mean),
       lwr_95 = pred_y - 1.96 * sqrt(diag(pred_var)),
       upr_95 = pred_y + 1.96 * sqrt(diag(pred_var))
     )
 
     par_dat <- mod$m %>%
-      tidybayes::spread_draws(sigma_g, phi) %>%
-      tidybayes::median_qi(sigma_g, phi)
+      tidybayes::gather_draws(sigma,sigma_g, phi) %>%
+      tidybayes::median_qi()
   }
 
   if (mod$model == "model_eiv_igp") {
@@ -490,8 +493,8 @@ par_est <- function(mod) {
       upr_95 = apply(pred, 2, stats::quantile, probs = 0.975))
 
     par_dat <- mod$m %>%
-      tidybayes::spread_draws(sigma_g, phi) %>%
-      tidybayes::median_qi(sigma_g, phi)
+      tidybayes::gather_draws(sigma, sigma_g, phi) %>%
+      tidybayes::median_qi()
 
   }
 

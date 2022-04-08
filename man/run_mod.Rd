@@ -4,7 +4,14 @@
 \alias{run_mod}
 \title{Fit errors-in-variables models with JAGS}
 \usage{
-run_mod(dat, model = "model_eiv_reg", iter = 15000, burnin = 5000, thin = 5)
+run_mod(
+  dat,
+  model = "model_eiv_reg",
+  iter = 15000,
+  burnin = 5000,
+  thin = 5,
+  scale_factor = 1
+)
 }
 \arguments{
 \item{dat}{Input data with columns x,x_err,y,y_err}
@@ -16,6 +23,8 @@ run_mod(dat, model = "model_eiv_reg", iter = 15000, burnin = 5000, thin = 5)
 \item{burnin}{MCMC burnin}
 
 \item{thin}{MCMC thinning}
+
+\item{scale_factor}{value to divide the predictor (x) by to change the scale. 1 will result in n0 change. 1000 is recommended if x is years.}
 }
 \value{
 List with data, JAGS input data, model output and the name of the model file.
