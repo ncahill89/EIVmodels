@@ -8,7 +8,7 @@ EIVmodels is designed to run some commonly used models (linear regression, chang
 
 ```
 # Install development version from Github
-devtools::install_github()
+devtools::install_github("ncahill89/EIVmodels")
 ```
 
 
