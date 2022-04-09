@@ -2,11 +2,11 @@
 
 In statistics, errors-in-variables (EIV) models, or measurement error models, are regression models that account for measurement errors in both the independent (predictor) and dependent (outcome) variables. EIVmodels is a R package designed to account for measurement errors in some commonly used models (linear regression, change-point regression, (Integrated) Gaussian process regression). The models are implemented in a Bayesian framework using the JAGS (Just Another Gibbs Sampler) software.
 
-# Requirements
+## Requirements
 
   - The package requires the installation of the JAGS software. You can download JAGS from [here](https://sourceforge.net/projects/mcmc-jags/).
 
-# Getting started
+## Getting started
 
 See Overview, Vignettes and Tutorials
 
