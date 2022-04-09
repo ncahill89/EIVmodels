@@ -4,7 +4,7 @@ In statistics, errors-in-variables (EIV) models, or measurement error models, ar
 
 # Requirements
 
-  - The package requires the installation of the JAGS software which you can download JAGS from [here](https://sourceforge.net/projects/mcmc-jags/).
+  - The package requires the installation of the JAGS software. You can download JAGS from [here](https://sourceforge.net/projects/mcmc-jags/).
 
 # Getting started
 
