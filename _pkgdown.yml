@@ -22,7 +22,7 @@ navbar:
       - text: CP Regression
         href: tutorials/CPTutorial.html
       - text: GP Regression
-        href: tutorials/CPTutorial.html
+        href: tutorials/GPTutorial.html
 
     reference:
       text: Documentation
