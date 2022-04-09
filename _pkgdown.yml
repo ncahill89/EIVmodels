@@ -19,8 +19,11 @@ navbar:
     tutorials:
       text: Tutorials
       menu:
-      - text: Cp Regression
+      - text: CP Regression
         href: tutorials/CPTutorial.html
+      - text: GP Regression
+        href: tutorials/CPTutorial.html
+
     reference:
       text: Documentation
       href: reference/index.html
