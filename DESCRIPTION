@@ -2,10 +2,13 @@ Package: EIVmodels
 Type: Package
 Title: Fit Errors-in-variables regression model
 Version: 0.1.0
-Authors@R: c(
-    person("Niamh", "Cahill", , "niamh.cahill@mu.ie", role = c("aut", "cre"),
+Authors@R:
+    c(person(given = "Niamh",
+           family = "Cahill",
+           role = c("aut", "cre"),
+           email = "niamh.cahill@mu.ie",
            comment = c(ORCID = "0000-0003-3086-550X"))
-  )
+    )
 Maintainer: The package maintainer <niamh.cahill@mu.ie>
 Description: You can fit 2 different models assuming an errors-in-variables framework (i.e., account for measurement errors in response and predictor variables)
 License: MIT + file LICENSE
