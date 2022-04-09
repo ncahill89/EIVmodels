@@ -5,12 +5,18 @@ navbar:
   structure:
     left:
     - home
-    - overview
+    - slides
     - articles
     - tutorials
     - reference
     - news
   components:
+    slides:
+      text: Slides
+      menu:
+      - text: Overview
+        href: slides/Slides.html
+
     articles:
       text: Vignettes
       menu:
@@ -25,7 +31,6 @@ navbar:
         href: tutorials/GPTutorial.html
       - text: Slides
         href: tutorials/Slides.html
-
     reference:
       text: Documentation
       href: reference/index.html
