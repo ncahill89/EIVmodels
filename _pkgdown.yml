@@ -16,7 +16,6 @@ navbar:
       menu:
       - text: Overview
         href: slides/Slides.html
-
     articles:
       text: Vignettes
       menu:
