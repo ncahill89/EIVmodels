@@ -1,4 +1,29 @@
 url: https://ncahill89.github.io/EIVmodels/
 template:
   bootstrap: 5
+navbar:
+  structure:
+    left:
+    - home
+    - overview
+    - articles
+    - tutorials
+    - reference
+    - news
+  components:
+    articles:
+      text: Vignettes
+      menu:
+      - text: Basics
+        href: articles/eivmodels.html
+    tutorials:
+      text: Tutorials
+      menu:
+      - text: Cp Regression
+        href: tutorials/CPTutorial.html
+    reference:
+      text: Documentation
+      href: reference/index.html
+
+
 
