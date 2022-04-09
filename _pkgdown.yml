@@ -23,6 +23,9 @@ navbar:
         href: tutorials/CPTutorial.html
       - text: GP Regression
         href: tutorials/GPTutorial.html
+      - text: Slides
+        href: tutorials/Slides.html
+
     reference:
       text: Documentation
       href: reference/index.html
