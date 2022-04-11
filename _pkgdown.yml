@@ -27,7 +27,7 @@ navbar:
       - text: CP Regression
         href: https://rpubs.com/ncahill_stat/889053
       - text: GP Regression
-        href: tutorials/GPTutorial.html
+        href: https://rpubs.com/ncahill_stat/889056
     reference:
       text: Documentation
       href: reference/index.html
