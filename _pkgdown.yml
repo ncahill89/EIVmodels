@@ -15,7 +15,7 @@ navbar:
       text: Slides
       menu:
       - text: Overview
-        href: slides/Slides.html
+        href: https://rpubs.com/ncahill_stat/854261
     articles:
       text: Vignettes
       menu:
