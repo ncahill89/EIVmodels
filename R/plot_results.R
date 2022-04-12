@@ -12,7 +12,7 @@ plot_res <- function(mod1,
                      mod2 = NULL,
                      add_truth = FALSE) {
 
-  x <- pred_y <- lwr_95 <- upr_95 <- y <- obs_index <- true_x <- true_line <- model_label <- NULL
+  x <- pred_y <- lwr_95 <- upr_95 <- rate_y <- rate_lwr_95 <- rate_upr_95 <- y <- obs_index <- true_x <- true_line <- model_label <- NULL
   ### format data for plotting with errors
   data_to_plot <- dat_to_plot(mod1$dat)
 
@@ -41,7 +41,18 @@ plot_res <- function(mod1,
     ggplot2::labs(colour = "", fill = "95% UI") +
     ggplot2::theme_classic()
 
+  if(mod1$model == "model_eiv_igp")
+  {
+  p_rate <- ggplot2::ggplot(pred_res, ggplot2::aes(x = x, y = rate_y)) +
+      ggplot2::geom_line(ggplot2::aes(colour = model_label)) +
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = rate_lwr_95, ymax = rate_upr_95, fill = model_label), alpha = 0.4) +
+      ggplot2::ylab("Rate") +
+      ggplot2::xlab("X") +
+      ggplot2::labs(colour = "", fill = "95% UI") +
+      ggplot2::theme_classic()
 
+  p <- ggpubr::ggarrange(p,p_rate,ncol = 1)
+  }
   ### add true line if indicated
   if (add_truth) {
     return(p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_line, colour = "Truth"), size = 1.5) +

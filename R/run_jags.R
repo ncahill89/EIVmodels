@@ -490,7 +490,10 @@ par_est <- function(mod) {
       x = seq(min(mod$dat$x), max(mod$dat$x), length.out = 50),
       pred_y = apply(pred, 2, stats::median),
       lwr_95 = apply(pred, 2, stats::quantile, probs = 0.025),
-      upr_95 = apply(pred, 2, stats::quantile, probs = 0.975))
+      upr_95 = apply(pred, 2, stats::quantile, probs = 0.975),
+      rate_y = apply(w.ms, 2, stats::median),
+      rate_lwr_95 = apply(w.ms, 2, stats::quantile, probs = 0.025),
+      rate_upr_95 = apply(w.ms, 2, stats::quantile, probs = 0.975))
 
     par_dat <- mod$m %>%
       tidybayes::gather_draws(sigma, sigma_g, phi) %>%

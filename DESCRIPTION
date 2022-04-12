@@ -10,7 +10,7 @@ Authors@R:
            comment = c(ORCID = "0000-0003-3086-550X"))
     )
 Maintainer: The package maintainer <niamh.cahill@mu.ie>
-Description: You can fit 2 different models assuming an errors-in-variables framework (i.e., account for measurement errors in response and predictor variables)
+Description: You can fit 2 different models assuming an errors-in-variables framework (i.e., account for measurement errors in response and predictor variables).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,6 +19,7 @@ Imports:
     dplyr,
     fields,
     ggplot2,
+    ggpubr,
     magrittr,
     mvtnorm,
     R2jags,
