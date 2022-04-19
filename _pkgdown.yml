@@ -24,8 +24,8 @@ navbar:
     tutorials:
       text: Tutorials
       menu:
-      - text: CP Regression
-        href: https://rpubs.com/ncahill_stat/889053
+      - text: EIV-CP Regression
+        href: https://rpubs.com/ncahill_stat/892178
       - text: GP Regression
         href: https://rpubs.com/ncahill_stat/889056
     reference:
