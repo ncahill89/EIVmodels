@@ -14,8 +14,8 @@ navbar:
     slides:
       text: Slides
       menu:
-      - text: Overview
-        href: https://rpubs.com/ncahill_stat/854261
+      - text: Introduction to Bayesian Models
+        href: https://rpubs.com/ncahill_stat/892131
     articles:
       text: Vignettes
       menu:
