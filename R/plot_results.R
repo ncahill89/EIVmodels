@@ -51,7 +51,7 @@ plot_res <- function(mod1,
       ggplot2::labs(colour = "", fill = "95% UI") +
       ggplot2::theme_classic()
 
-  p <- ggpubr::ggarrange(p,p_rate,ncol = 1)
+  p <- ggpubr::ggarrange(p,p_rate,ncol = 1, common.legend = TRUE)
   }
   ### add true line if indicated
   if (add_truth) {

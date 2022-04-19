@@ -63,3 +63,92 @@ To access a summary of the parameter estimates, use:
 mod_reg_res$par_summary
 ```
 
+## Example - Using real data
+
+The package contains a dataset called `NJ_CC` which is subset of a sea level reconstruction from New Jersey, USA. Note the format of the dataset. This is the format you should use for any data you want to apply these models to. 
+
+```{r}
+EIVmodels::NJ_CC
+```
+Let's plot the data
+
+```{r}
+plot_dat(NJ_CC)
+```
+
+__EIV simple linear regression__
+
+Let's fit the EIV simple linear regression model. With these data its a good idea to scale the age data. Dividing my 1000 is useful here, as the relative sea level data ($y$) is in metres, dividing by 1000 means the slope (rate of change) is still easily interpreted in relation to the original scale of the data. In this case the slope can be interpreted in mm/yr.
+
+```{r}
+mod_eiv_slr <- run_mod(NJ_CC,
+                       model = "model_eiv_slr",
+                       scale_factor = 1000)
+```
+
+Let's get the parameter estimates
+
+```{r}
+mod_reg_res <- par_est(mod = mod_eiv_slr)
+mod_reg_res$par_summary
+```
+
+Based on this model, the rate of sea level change is 1.9 mm/yr (95% UI: 1.7 to 2.1 mm/yr) 
+
+Now, let's visualise the results
+
+```{r, warning=FALSE, message=FALSE}
+plot_res(mod_eiv_slr)
+```
+
+__EIV change-point linear regression__
+
+Let's fit the EIV change point linear regression model instead. All we need to do is change the model argument.
+
+```{r}
+mod_eiv_cp1 <- run_mod(NJ_CC,
+                       model = "model_eiv_cp1",
+                       scale_factor = 1000)
+```
+
+Let's get the parameter estimates
+
+```{r}
+mod_cp_res <- par_est(mod = mod_eiv_cp1)
+mod_cp_res$par_summary
+```
+
+Now, let's visualise the results
+
+```{r, warning=FALSE, message=FALSE}
+plot_res(mod_eiv_cp1)
+```
+
+__EIV Integrated Gaussian Process__
+
+Let's fit the EIV integrated Gaussian process model. This is a much richer model and will take longer to run than the others. However, an advantage is that it  provides the underlying rate process as well as the sea level process over time. 
+
+
+```{r, eval = FALSE}
+mod_eiv_igp <- run_mod(NJ_CC,
+                       model = "model_eiv_igp",
+                       scale_factor = 1000)
+```
+
+```{r, echo = FALSE, include=FALSE}
+mod_eiv_igp <- readRDS("mod_eiv_igp.rds")
+```
+
+Let's visualise the results
+
+```{r, warning=FALSE, message=FALSE}
+plot_res(mod_eiv_igp)
+```
+
+
+Let's look at the output that creates these results plots
+
+```{r}
+mod_igp_res <- par_est(mod = mod_eiv_igp)
+mod_igp_res$pred_res
+```
