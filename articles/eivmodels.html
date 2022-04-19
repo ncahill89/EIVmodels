@@ -40,7 +40,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-slides">Slides</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-slides">
-    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/854261">Overview</a>
+    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/892131">Introduction to Bayesian Models</a>
   </div>
 </li>
 <li class="active nav-item dropdown">
@@ -52,7 +52,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/889053">CP Regression</a>
+    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/892178">EIV-CP Regression</a>
     <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/889056">GP Regression</a>
   </div>
 </li>
@@ -96,24 +96,24 @@
 </h2>
 <p>This package provides options to simulate data from different types of models where there is measurement error in both the <code>x</code> and <code>y</code> variable. We’ll start by simulating some data from a linear regression model.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_reg.html">sim_reg</a></span><span class="op">(</span>n_sim <span class="op">=</span> <span class="fl">10</span>,
+<code class="sourceCode R"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_slr.html">sim_slr</a></span><span class="op">(</span>n_sim <span class="op">=</span> <span class="fl">10</span>,
                alpha <span class="op">=</span> <span class="fl">0</span>,
                beta <span class="op">=</span> <span class="fl">1</span>,
                x_err <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
 <span class="va">dat</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 10 × 6</span></span>
-<span class="co">##        x x_err     y y_err true_line true_x</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 1.10    0.1 1.27    0.1     1.12   1.12 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.952   0.1 1.09    0.1     1.13   1.13 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 1.57    0.1 1.36    0.1     1.35   1.35 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 1.72    0.1 1.64    0.1     1.67   1.67 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.929   0.1 0.736   0.1     0.839  0.839</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 1.55    0.1 1.75    0.1     1.61   1.61 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 1.60    0.1 1.72    0.1     1.68   1.68 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 1.34    0.1 1.43    0.1     1.24   1.24 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.629   0.1 0.772   0.1     0.703  0.703</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 0.954   0.1 1.04    0.1     1.07   1.07</span></code></pre>
+<span class="co">##        x x_err     y y_err true_y true_x</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 1.49    0.1 1.33    0.1  1.27   1.27 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.466   0.1 0.306   0.1  0.428  0.428</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.687   0.1 0.756   0.1  0.724  0.724</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 1.77    0.1 1.73    0.1  1.71   1.71 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 1.68    0.1 1.76    0.1  1.77   1.77 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.287   0.1 0.134   0.1  0.170  0.170</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 1.79    0.1 1.85    0.1  1.69   1.69 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 1.73    0.1 1.76    0.1  1.81   1.81 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 1.73    0.1 1.82    0.1  1.85   1.85 </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 0.480   0.1 0.499   0.1  0.590  0.590</span></code></pre>
 <p>Next we’ll plot the simulated data and we’ll add the true regression line to the plot by adding the argument <code>add_truth = TRUE</code> to the <code><a href="../reference/plot_dat.html">plot_dat()</a></code> function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_dat.html">plot_dat</a></span><span class="op">(</span><span class="va">dat</span>,
@@ -121,8 +121,8 @@
 <p><img src="eivmodels_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>Now we’ll fit the errors-in-variables simple linear regression model to the data and see how close we get to estimating the true data generating process. We’ll start by creating a model object and specifying the argument <code>model = "model_eiv_reg"</code>. You’ll see some messages and a progress bar pop up as the JAGS model starts to run.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod_eiv_reg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mod.html">run_mod</a></span><span class="op">(</span><span class="va">dat</span>,
-                   model <span class="op">=</span> <span class="st">"model_eiv_reg"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">mod_eiv_slr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mod.html">run_mod</a></span><span class="op">(</span><span class="va">dat</span>,
+                   model <span class="op">=</span> <span class="st">"model_eiv_slr"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## module glm loaded</span></code></pre>
 <pre><code><span class="co">## Compiling model graph</span>
 <span class="co">##    Resolving undeclared variables</span>
@@ -130,124 +130,41 @@
 <span class="co">## Graph information:</span>
 <span class="co">##    Observed stochastic nodes: 20</span>
 <span class="co">##    Unobserved stochastic nodes: 13</span>
-<span class="co">##    Total graph size: 237</span>
+<span class="co">##    Total graph size: 240</span>
 <span class="co">## </span>
 <span class="co">## Initializing model</span></code></pre>
 <p>Now we’ll plot the model-based estimates with uncertainty. We’ll overlay the true line as a comparison.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_res.html">plot_res</a></span><span class="op">(</span><span class="va">mod_eiv_reg</span>,
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_res.html">plot_res</a></span><span class="op">(</span><span class="va">mod_eiv_slr</span>,
          add_truth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="eivmodels_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>To access the data that created this plot, use:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod_reg_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_est.html">par_est</a></span><span class="op">(</span>mod <span class="op">=</span> <span class="va">mod_eiv_reg</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">mod_reg_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_est.html">par_est</a></span><span class="op">(</span>mod <span class="op">=</span> <span class="va">mod_eiv_slr</span><span class="op">)</span>
 <span class="va">mod_reg_res</span><span class="op">$</span><span class="va">pred_res</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 50 × 4</span></span>
 <span class="co">##        x pred_y lwr_95 upr_95</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 0.629  0.754  0.501   1.00</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.651  0.775  0.528   1.01</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.674  0.796  0.557   1.03</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 0.696  0.817  0.585   1.04</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.718  0.838  0.613   1.05</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.741  0.859  0.640   1.07</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.763  0.880  0.669   1.08</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 0.785  0.901  0.696   1.10</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.808  0.923  0.724   1.11</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 0.830  0.944  0.753   1.13</span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 0.287  0.224 0.032<span style="text-decoration: underline;">5</span>  0.402</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.318  0.258 0.071<span style="text-decoration: underline;">0</span>  0.432</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.348  0.292 0.109   0.462</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 0.379  0.326 0.147   0.491</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.410  0.359 0.184   0.522</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.440  0.393 0.223   0.551</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.471  0.427 0.261   0.582</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 0.502  0.462 0.300   0.612</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.532  0.495 0.338   0.642</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 0.563  0.529 0.375   0.672</span>
 <span class="co">## <span style="color: #949494;"># … with 40 more rows</span></span></code></pre>
 <p>To access a summary of the parameter estimates, use:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mod_reg_res</span><span class="op">$</span><span class="va">par_summary</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 7</span></span>
-<span class="co">##   .variable .value   .lower .upper .width .point .interval</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> alpha     0.160  -<span style="color: #BB0000;">0.329</span>    0.611   0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> beta      0.944   0.582    1.35    0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> sigma     0.058<span style="text-decoration: underline;">8</span>  0.003<span style="text-decoration: underline;">52</span>  0.230   0.95 median qi</span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="example---change-point-linear-regression">Example - Change-Point Linear Regression<a class="anchor" aria-label="anchor" href="#example---change-point-linear-regression"></a>
-</h2>
-<p>We can simulate data from a change-point regression model. In this case there will be a different trend (slope) before and after the change point (specified with beta = c(1,0.1)). The change from a slope of 1 to a slope of 0.1 will happen at x = 1.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_cp.html">sim_cp</a></span><span class="op">(</span>n_sim <span class="op">=</span> <span class="fl">30</span>,
-               alpha <span class="op">=</span> <span class="fl">0</span>,
-               beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.1</span><span class="op">)</span>,
-               cp <span class="op">=</span> <span class="fl">1</span>,
-               x_err <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
-<span class="va">dat</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 30 × 6</span></span>
-<span class="co">##        x x_err       y y_err true_line true_x</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 1.02    0.1 -<span style="color: #BB0000;">0.101</span>    0.1    0.024<span style="text-decoration: underline;">2</span>  1.24 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.697   0.1 -<span style="color: #BB0000;">0.241</span>    0.1   -<span style="color: #BB0000;">0.310</span>   0.690</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 1.91    0.1  0.174    0.1    0.098<span style="text-decoration: underline;">3</span>  1.98 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 1.22    0.1  0.030<span style="text-decoration: underline;">0</span>   0.1    0.020<span style="text-decoration: underline;">4</span>  1.20 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 1.13    0.1 -<span style="color: #BB0000;">0.055</span><span style="color: #BB0000; text-decoration: underline;">7</span>   0.1    0.029<span style="text-decoration: underline;">1</span>  1.29 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.947   0.1  0.019<span style="text-decoration: underline;">6</span>   0.1   -<span style="color: #BB0000;">0.108</span>   0.892</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 1.30    0.1  0.165    0.1    0.036<span style="text-decoration: underline;">2</span>  1.36 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 0.672   0.1 -<span style="color: #BB0000;">0.385</span>    0.1   -<span style="color: #BB0000;">0.389</span>   0.611</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 1.03    0.1 -<span style="color: #BB0000;">0.204</span>    0.1   -<span style="color: #BB0000;">0.109</span>   0.891</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 1.59    0.1  0.099<span style="text-decoration: underline;">8</span>   0.1    0.038<span style="text-decoration: underline;">0</span>  1.38 </span>
-<span class="co">## <span style="color: #949494;"># … with 20 more rows</span></span></code></pre>
-<p>Next we’ll plot the simulated data and we’ll add the true regression line to the plot by adding the argument <code>add_truth = TRUE</code> to the <code><a href="../reference/plot_dat.html">plot_dat()</a></code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_dat.html">plot_dat</a></span><span class="op">(</span><span class="va">dat</span>,
-         add_truth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="eivmodels_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>We’ll fit a EIV-linear regression model and an EIV-CP regression model (specified with the argument `model = “model_eiv_cp1”) to these data.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod_eiv_lr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mod.html">run_mod</a></span><span class="op">(</span><span class="va">dat</span>,
-                   model <span class="op">=</span> <span class="st">"model_eiv_reg"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Compiling model graph</span>
-<span class="co">##    Resolving undeclared variables</span>
-<span class="co">##    Allocating nodes</span>
-<span class="co">## Graph information:</span>
-<span class="co">##    Observed stochastic nodes: 60</span>
-<span class="co">##    Unobserved stochastic nodes: 33</span>
-<span class="co">##    Total graph size: 377</span>
-<span class="co">## </span>
-<span class="co">## Initializing model</span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod_eiv_cp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_mod.html">run_mod</a></span><span class="op">(</span><span class="va">dat</span>,
-                   model <span class="op">=</span> <span class="st">"model_eiv_cp1"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Compiling model graph</span>
-<span class="co">##    Resolving undeclared variables</span>
-<span class="co">##    Allocating nodes</span>
-<span class="co">## Graph information:</span>
-<span class="co">##    Observed stochastic nodes: 60</span>
-<span class="co">##    Unobserved stochastic nodes: 35</span>
-<span class="co">##    Total graph size: 701</span>
-<span class="co">## </span>
-<span class="co">## Initializing model</span></code></pre>
-<p>We’ll comapare both methods</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_res.html">plot_res</a></span><span class="op">(</span><span class="va">mod_eiv_lr</span>,
-         <span class="va">mod_eiv_cp</span>,
-         add_truth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="eivmodels_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>To access the parameter summaries for both model we need to run the <code>par_est</code> function</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod_lr_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_est.html">par_est</a></span><span class="op">(</span>mod <span class="op">=</span> <span class="va">mod_eiv_reg</span><span class="op">)</span>
-<span class="va">mod_lr_res</span><span class="op">$</span><span class="va">par_summary</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 7</span></span>
-<span class="co">##   .variable .value   .lower .upper .width .point .interval</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> alpha     0.160  -<span style="color: #BB0000;">0.329</span>    0.611   0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> beta      0.944   0.582    1.35    0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> sigma     0.058<span style="text-decoration: underline;">8</span>  0.003<span style="text-decoration: underline;">52</span>  0.230   0.95 median qi</span></code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod_cp_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_est.html">par_est</a></span><span class="op">(</span>mod <span class="op">=</span> <span class="va">mod_eiv_cp</span><span class="op">)</span>
-<span class="va">mod_cp_res</span><span class="op">$</span><span class="va">par_summary</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 8</span></span>
-<span class="co">##   .variable `1:2` .value    .lower .upper .width .point .interval</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> alpha        <span style="color: #BB0000;">NA</span> 0.082<span style="text-decoration: underline;">8</span> -<span style="color: #BB0000;">0.093</span><span style="color: #BB0000; text-decoration: underline;">2</span>   0.312    0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> beta          1 0.949   0.732    1.28     0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> beta          2 0.052<span style="text-decoration: underline;">5</span> -<span style="color: #BB0000;">0.640</span>    0.328    0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> cp           <span style="color: #BB0000;">NA</span> 1.16    0.870    1.56     0.95 median qi       </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> sigma        <span style="color: #BB0000;">NA</span> 0.014<span style="text-decoration: underline;">2</span>  0.000<span style="text-decoration: underline;">588</span> 0.059<span style="text-decoration: underline;">2</span>   0.95 median qi</span></code></pre>
+<span class="co">##   .variable  .value   .lower .upper .width .point .interval</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> alpha     -<span style="color: #BB0000;">0.093</span><span style="color: #BB0000; text-decoration: underline;">7</span> -<span style="color: #BB0000;">0.334</span>    0.124   0.95 median qi       </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> beta       1.11    0.939    1.30    0.95 median qi       </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> sigma      0.052<span style="text-decoration: underline;">0</span>  0.002<span style="text-decoration: underline;">54</span>  0.206   0.95 median qi</span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

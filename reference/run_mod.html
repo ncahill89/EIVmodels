@@ -21,7 +21,7 @@
       <ul class="navbar-nav me-auto"><li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-slides">Slides</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-slides">
-    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/854261">Overview</a>
+    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/892131">Introduction to Bayesian Models</a>
   </div>
 </li>
 <li class="nav-item dropdown">
@@ -33,7 +33,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/889053">CP Regression</a>
+    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/892178">EIV-CP Regression</a>
     <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/889056">GP Regression</a>
   </div>
 </li>
@@ -63,7 +63,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_mod</span><span class="op">(</span>
   <span class="va">dat</span>,
-  model <span class="op">=</span> <span class="st">"model_eiv_reg"</span>,
+  model <span class="op">=</span> <span class="st">"model_eiv_slr"</span>,
   iter <span class="op">=</span> <span class="fl">15000</span>,
   burnin <span class="op">=</span> <span class="fl">5000</span>,
   thin <span class="op">=</span> <span class="fl">5</span>,
@@ -76,7 +76,7 @@
     <dl><dt>dat</dt>
 <dd><p>Input data with columns x,x_err,y,y_err</p></dd>
 <dt>model</dt>
-<dd><p>The model to run. Choose from model_reg, model_eiv_reg, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_reg.</p></dd>
+<dd><p>The model to run. Choose from model_slr, model_eiv_slr, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_slr.</p></dd>
 <dt>iter</dt>
 <dd><p>MCMC iterations</p></dd>
 <dt>burnin</dt>
@@ -93,15 +93,15 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_reg.html">sim_reg</a></span><span class="op">(</span>n_sim <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">run_mod</span><span class="op">(</span><span class="va">dat</span>, model <span class="op">=</span> <span class="st">"model_eiv_reg"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_slr.html">sim_slr</a></span><span class="op">(</span>n_sim <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">run_mod</span><span class="op">(</span><span class="va">dat</span>, model <span class="op">=</span> <span class="st">"model_eiv_slr"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 380</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
