@@ -18,6 +18,6 @@ Plot of data with measurement errors
 Plot data with measurement uncertainty (in y and x variables)
 }
 \examples{
-dat <- sim_reg(n_sim = 30)
+dat <- sim_slr(n_sim = 30)
 plot_dat(dat)
 }

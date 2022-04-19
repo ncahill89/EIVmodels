@@ -5,8 +5,8 @@
 #' @return Plot
 #' @export
 #' @examples
-#' dat <- sim_reg(n_sim = 30)
-#' mod <- run_mod(dat,model = "model_eiv_reg")
+#' dat <- sim_slr(n_sim = 30)
+#' mod <- run_mod(dat,model = "model_eiv_slr")
 #' plot_res(mod)
 plot_res <- function(mod1,
                      mod2 = NULL,

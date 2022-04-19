@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' dat <- sim_reg(n_sim = 30)
+#' dat <- sim_slr(n_sim = 30)
 #' plot_dat(dat)
 plot_dat <- function(dat,
                      add_truth = FALSE) {

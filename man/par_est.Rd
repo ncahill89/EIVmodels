@@ -16,7 +16,7 @@ List with model estimates (pred_res) and parameter estimates (par_summary)
 Get parameter estimates and model estimates
 }
 \examples{
-dat <- sim_reg(n_sim = 30)
-mod <- run_mod(dat, model = "model_eiv_reg")
+dat <- sim_slr(n_sim = 30)
+mod <- run_mod(dat, model = "model_eiv_slr")
 par_est(mod)
 }

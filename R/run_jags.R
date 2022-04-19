@@ -1,7 +1,7 @@
 #' Fit errors-in-variables models with JAGS
 #'
 #' @param dat Input data with columns x,x_err,y,y_err
-#' @param model The model to run. Choose from model_reg, model_eiv_reg, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_reg.
+#' @param model The model to run. Choose from model_slr, model_eiv_slr, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_slr.
 #' @param iter MCMC iterations
 #' @param burnin MCMC burnin
 #' @param thin MCMC thinning
@@ -11,10 +11,10 @@
 #' @export
 #'
 #' @examples
-#' dat <- sim_reg(n_sim = 30)
-#' mod <- run_mod(dat, model = "model_eiv_reg")
+#' dat <- sim_slr(n_sim = 30)
+#' mod <- run_mod(dat, model = "model_eiv_slr")
 run_mod <- function(dat,
-                    model = "model_eiv_reg",
+                    model = "model_eiv_slr",
                     iter = 15000,
                     burnin = 5000,
                     thin = 5,
@@ -26,14 +26,16 @@ run_mod <- function(dat,
   dat <- dat %>% dplyr::mutate(x_st = x/scale_factor,
                                x_err_st = x_err/scale_factor)
 
-  if (model == "model_reg") {
+  if (model == "model_slr") {
     run_model <-
       "model{
   ## Data model loop
   for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],(sigma + y_err[j])^-2)
+  y[j]~dnorm(mu_y[j],tau[j])
   mu_y[j] <- alpha + beta*(x[j])
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
+
   } # end j loop
 
  ## Priors
@@ -47,16 +49,18 @@ run_mod <- function(dat,
 "
   }
 
-  if (model == "model_eiv_reg") {
+  if (model == "model_eiv_slr") {
     run_model <-
       "model{
   ## Data model loop
   for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],(sigma + y_err[j])^-2)
+  y[j] ~ dnorm(mu_y[j],tau[j])
   x[j] ~ dnorm(mu_x[j],x_err[j]^-2)
   mu_x[j] ~ dnorm(0,0.5^-2)
   mu_y[j] <- alpha + beta*(mu_x[j])
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
+
   } # end j loop
 
  ## Priors
@@ -79,9 +83,10 @@ model{
   ###Data Loop
     for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],(sigma + y_err[j])^-2)
+  y[j]~dnorm(mu_y[j],tau[j])
   C[j] <- 1+step(x[j]-cp)
   mu_y[j] <- alpha + beta[C[j]]*(x[j]-cp)
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
   }
 
   ##Priors
@@ -113,11 +118,13 @@ model{
   ###Data Loop
     for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],(sigma + y_err[j])^-2)
+  y[j]~dnorm(mu_y[j],tau[j])
   x[j] ~ dnorm(mu_x[j],x_err[j]^-2)
   C[j] <- 1+step(mu_x[j]-cp)
   mu_x[j] ~ dnorm(0,0.5^-2)
   mu_y[j] <- alpha + beta[C[j]]*(mu_x[j]-cp)
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
+
   }
 
   ##Priors
@@ -156,7 +163,9 @@ model{
     Sigma[j,i] <- Sigma[i,j]
     }
 
-    y[i]~dnorm(gp[i],(sigma + y_err[i])^-2)
+    y[i]~dnorm(gp[i],tau[i])
+    tau[i] <- <- (y_err[i]^2 + sigma^2)^-1
+
 
   }
 
@@ -186,9 +195,11 @@ model{
     Sigma[j,i] <- Sigma[i,j]
     }
 
-    y[i]~dnorm(gp[i],(sigma + y_err[i])^-2)
+    y[i]~dnorm(gp[i],tau[i])
     x[i] ~ dnorm(mu_x[i],x_err[i]^-2)
     mu_x[i] ~ dnorm(0,0.5^-2)
+    tau[i] <- (y_err[i]^2 + sigma^2)^-1
+
 
   }
 
@@ -208,10 +219,12 @@ model{
 {
   for(i in 1:n_obs)
   {
-    y[i]~dnorm(alpha + w.tilde.m[i],(sigma + y_err[i] + noisy_xerr[i])^-2)
+    y[i]~dnorm(alpha + w.tilde.m[i],tau[i])
     x[i] ~ dnorm(mu_x[i],x_err[i]^-2)
     mu_x[i] ~ dnorm(0,0.5^-2)
     noisy_xerr[i] <- sqrt((beta^2)*(x_err[i]^2))
+    tau[i] <- (y_err[i]^2 + sigma^2 + noisy_xerr[i]^2)^-1
+
   }
 
 
@@ -280,7 +293,7 @@ model{
       "mu_x"
     )
   }
-  if (model == "model_reg" | model == "model_eiv_reg") {
+  if (model == "model_slr" | model == "model_eiv_slr") {
     jags_pars <- c(
       "mu_pred",
       "y_pred",
@@ -349,15 +362,15 @@ model{
 #' @export
 #'
 #' @examples
-#' dat <- sim_reg(n_sim = 30)
-#' mod <- run_mod(dat, model = "model_eiv_reg")
+#' dat <- sim_slr(n_sim = 30)
+#' mod <- run_mod(dat, model = "model_eiv_slr")
 #' par_est(mod)
 
 par_est <- function(mod) {
 
   mu_pred <- .lower <- .upper <- x <- pred_y <- lwr_95 <- upr_95 <- alpha <- cp <- sigma_g <- phi <- sigma <- mu_x <- dat <- NULL
 
-  if (mod$model == "model_reg" | mod$model == "model_eiv_reg") {
+  if (mod$model == "model_slr" | mod$model == "model_eiv_slr") {
     pred_res <- mod$m %>%
       tidybayes::spread_draws(mu_pred[1:mod$jags_data$n_pred]) %>%
       tidybayes::median_qi(mu_pred) %>%

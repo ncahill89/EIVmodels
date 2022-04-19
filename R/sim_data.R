@@ -13,8 +13,8 @@
 #' @export
 #'
 #' @examples
-#' sim_reg(n_sim = 50)
-sim_reg <- function(n_sim = 50,
+#' sim_slr(n_sim = 50)
+sim_slr <- function(n_sim = 50,
                     min_x = 0,
                     max_x = 2,
                     alpha = 0,

@@ -6,7 +6,7 @@
 \usage{
 run_mod(
   dat,
-  model = "model_eiv_reg",
+  model = "model_eiv_slr",
   iter = 15000,
   burnin = 5000,
   thin = 5,
@@ -16,7 +16,7 @@ run_mod(
 \arguments{
 \item{dat}{Input data with columns x,x_err,y,y_err}
 
-\item{model}{The model to run. Choose from model_reg, model_eiv_reg, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_reg.}
+\item{model}{The model to run. Choose from model_slr, model_eiv_slr, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_slr.}
 
 \item{iter}{MCMC iterations}
 
@@ -33,6 +33,6 @@ List with data, JAGS input data, model output and the name of the model file.
 Fit errors-in-variables models with JAGS
 }
 \examples{
-dat <- sim_reg(n_sim = 30)
-mod <- run_mod(dat, model = "model_eiv_reg")
+dat <- sim_slr(n_sim = 30)
+mod <- run_mod(dat, model = "model_eiv_slr")
 }
