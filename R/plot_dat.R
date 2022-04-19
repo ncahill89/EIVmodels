@@ -12,7 +12,7 @@
 plot_dat <- function(dat,
                      add_truth = FALSE) {
 
-  x <- y <- obs_index <- true_x <- true_line <- NULL
+  x <- y <- obs_index <- true_x <- true_y <- NULL
   data_to_plot <- dat_to_plot(dat)
   p <- ggplot2::ggplot(data_to_plot, ggplot2::aes(x = x, y = y)) +
     ggplot2::geom_polygon(ggplot2::aes(group = obs_index, fill = "1-sigma error"), alpha = 0.3) +
@@ -24,7 +24,7 @@ plot_dat <- function(dat,
 
 
   if (add_truth) {
-    return(p + ggplot2::geom_line(data = dat, ggplot2::aes(x = true_x, y = true_line, colour = "Truth"), size = 1.5) +
+    return(p + ggplot2::geom_line(data = dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
              ggplot2::labs(colour = ""))
   }
 

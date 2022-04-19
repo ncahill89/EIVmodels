@@ -36,7 +36,7 @@ sim_slr <- function(n_sim = 50,
     x_err = x_err,
     y = obsy,
     y_err = y_err,
-    true_line = true_reg,
+    true_y = true_reg,
     true_x = truex
   )
 
@@ -86,7 +86,7 @@ sim_cp <- function(n_sim = 50,
     x_err = x_err,
     y = obsy,
     y_err = y_err,
-    true_line = true_cp,
+    true_y = true_cp,
     true_x = truex
   )
 
@@ -170,7 +170,7 @@ fake <- 0
     x_err = x_err,
     y = y,
     y_err = y_err,
-    true_line = gp,
+    true_y = gp,
     true_x = true_x
   )
 
