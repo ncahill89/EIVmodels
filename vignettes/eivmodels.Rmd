@@ -22,7 +22,7 @@ library(EIVmodels)
 This package provides options to simulate data from different types of models where there is measurement error in both the `x` and `y` variable. We'll start by simulating some data from a linear regression model. 
 
 ```{r}
-dat <- sim_reg(n_sim = 10,
+dat <- sim_slr(n_sim = 10,
                alpha = 0,
                beta = 1,
                x_err = 0.1)
@@ -39,21 +39,21 @@ plot_dat(dat,
 Now we'll fit the errors-in-variables simple linear regression model to the data and see how close we get to estimating the true data generating process. We'll start by creating a model object and specifying the argument `model = "model_eiv_reg"`. You'll see some messages and a progress bar pop up as the JAGS model starts to run. 
 
 ```{r}
-mod_eiv_reg <- run_mod(dat,
-                   model = "model_eiv_reg")
+mod_eiv_slr <- run_mod(dat,
+                   model = "model_eiv_slr")
 ```
 
 Now we'll plot the model-based estimates with uncertainty. We'll overlay the true line as a comparison. 
 
 ```{r, warning=FALSE, message=FALSE}
-plot_res(mod_eiv_reg,
+plot_res(mod_eiv_slr,
          add_truth = TRUE)
 ```
 
 To access the data that created this plot, use:
 
 ```{r}
-mod_reg_res <- par_est(mod = mod_eiv_reg)
+mod_reg_res <- par_est(mod = mod_eiv_slr)
 mod_reg_res$pred_res
 ```
 
@@ -63,50 +63,3 @@ To access a summary of the parameter estimates, use:
 mod_reg_res$par_summary
 ```
 
-## Example - Change-Point Linear Regression
-
-We can simulate data from a change-point regression model. In this case there will be a different trend (slope) before and after the change point (specified with beta = c(1,0.1)). The change from a slope of 1 to a slope of 0.1 will happen at x = 1. 
-
-```{r}
-dat <- sim_cp(n_sim = 30,
-               alpha = 0,
-               beta = c(1,0.1),
-               cp = 1,
-               x_err = 0.1)
-dat
-```
-
-Next we'll plot the simulated data and we'll add the true regression line to the plot by adding the argument `add_truth = TRUE` to the `plot_dat()` function. 
-
-```{r}
-plot_dat(dat,
-         add_truth = TRUE)
-```
-
-We'll fit a EIV-linear regression model and an EIV-CP regression model (specified with the argument `model = "model_eiv_cp1") to these data.
-
-```{r}
-mod_eiv_lr <- run_mod(dat,
-                   model = "model_eiv_reg")
-
-mod_eiv_cp <- run_mod(dat,
-                   model = "model_eiv_cp1")
-```
-
-We'll comapare both methods 
-
-```{r, message = FALSE}
-plot_res(mod_eiv_lr,
-         mod_eiv_cp,
-         add_truth = TRUE)
-```
-
-To access the parameter summaries for both model we need to run the `par_est` function
-
-```{r}
-mod_lr_res <- par_est(mod = mod_eiv_reg)
-mod_lr_res$par_summary
-
-mod_cp_res <- par_est(mod = mod_eiv_cp)
-mod_cp_res$par_summary
-```
