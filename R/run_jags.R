@@ -21,10 +21,12 @@ run_mod <- function(dat,
                     scale_factor = 1) {
 
   # Simple Linear Regression Model ------------------------------------------
-  x<-x_err<- NULL
+  x <- x_err <- NULL
 
-  dat <- dat %>% dplyr::mutate(x_st = x/scale_factor,
-                               x_err_st = x_err/scale_factor)
+  dat <- dat %>% dplyr::mutate(
+    x_st = x / scale_factor,
+    x_err_st = x_err / scale_factor
+  )
 
   if (model == "model_slr") {
     run_model <-
@@ -164,7 +166,7 @@ model{
     }
 
     y[i]~dnorm(gp[i],tau[i])
-    tau[i] <- <- (y_err[i]^2 + sigma^2)^-1
+    tau[i] <- (y_err[i]^2 + sigma^2)^-1
 
 
   }
@@ -214,8 +216,8 @@ model{
   }
 
   if (model == "model_eiv_igp") {
-  run_model <-
-"model
+    run_model <-
+      "model
 {
   for(i in 1:n_obs)
   {
@@ -264,9 +266,8 @@ model{
 
 }##End model
 "
-  igp_dat_list <- igp_data(dat)
-
-}
+    igp_dat_list <- igp_data(dat)
+  }
 
   ### The required data
   jags_data <- list(
@@ -280,7 +281,7 @@ model{
     x_pred = seq(min(dat$x), max(dat$x), length.out = 50),
     x_min = min(dat$x_st),
     x_max = max(dat$x_st)
-    )
+  )
 
 
   ### Parameters to save
@@ -313,17 +314,15 @@ model{
     )
   }
   if (model == "model_eiv_igp") {
-
     jags_pars <- c(
       "phi",
       "sigma_g",
       "sigma",
       "w.m",
-      "noisy_xerr",
       "alpha",
       "beta"
     )
-  jags_data <- c(igp_dat_list,jags_data)
+    jags_data <- c(igp_dat_list, jags_data)
   }
 
 
@@ -341,17 +340,20 @@ model{
 
   ### Create an object containing the posterior samples
   m <- mod$BUGSoutput$sims.matrix
+  sample_draws <- tidybayes::tidy_draws(m)
+  par_summary <- posterior::summarise_draws(sample_draws)
+  if(sum(par_summary$rhat >1.1, na.rm = TRUE) == 0) message("No convergence issues detected")
+  if(sum(par_summary$rhat >1.1, na.rm = TRUE) > 0) message("Convergence issues detected")
 
 
   return(list(
-    m = m,
+    sample_draws = sample_draws,
     model = model,
     dat = dat,
-    sims_list = mod$BUGSoutput$sims.list,
     jags_data = jags_data,
     scale_factor = scale_factor
   ))
-  }
+}
 
 
 #' Get parameter estimates and model estimates
@@ -365,14 +367,30 @@ model{
 #' dat <- sim_slr(n_sim = 30)
 #' mod <- run_mod(dat, model = "model_eiv_slr")
 #' par_est(mod)
-
+#'
 par_est <- function(mod) {
+
 
   mu_pred <- .lower <- .upper <- x <- pred_y <- lwr_95 <- upr_95 <- alpha <- cp <- sigma_g <- phi <- sigma <- mu_x <- dat <- NULL
 
+  sample_draws <- mod$sample_draws
+  n_iter <- sample_draws$.iteration %>%
+    unique() %>%
+    length()
+  if(n_iter >1000) {
+    sample_draws <- sample_draws %>% dplyr::slice_sample(n = 1000)
+    n_iter <- 1000
+    }
+  jags_data <- mod$jags_data
+
   if (mod$model == "model_slr" | mod$model == "model_eiv_slr") {
-    pred_res <- mod$m %>%
-      tidybayes::spread_draws(mu_pred[1:mod$jags_data$n_pred]) %>%
+    pred_summary <- sample_draws %>%
+      tidyr::pivot_longer(`mu_pred[1]`:`mu_pred[50]`,
+        names_to = "n",
+        values_to = "mu_pred"
+      ) %>%
+      dplyr::mutate(n = rep(1:50, n_iter)) %>%
+      dplyr::group_by(n) %>%
       tidybayes::median_qi(mu_pred) %>%
       dplyr::mutate(x = mod$jags_data$x_pred) %>%
       dplyr::mutate(
@@ -383,16 +401,19 @@ par_est <- function(mod) {
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
 
-    par_dat <- mod$m %>%
-      tidybayes::gather_draws(alpha, beta,sigma) %>%
-      tidybayes::median_qi()
+    par_summary <- posterior::summarise_draws(sample_draws) %>% filter(variable %in% c("alpha", "beta", "sigma"))
   }
 
   if (mod$model == "model_cp1" | mod$model == "model_eiv_cp1") {
 
     ### Store results
-    pred_res <- mod$m %>%
-      tidybayes::spread_draws(mu_pred[1:mod$jags_data$n_pred]) %>%
+    pred_summary <- sample_draws %>%
+      tidyr::pivot_longer(`mu_pred[1]`:`mu_pred[50]`,
+        names_to = "n",
+        values_to = "mu_pred"
+      ) %>%
+      dplyr::mutate(n = rep(1:50, n_iter)) %>%
+      dplyr::group_by(n) %>%
       tidybayes::median_qi(mu_pred) %>%
       dplyr::mutate(x = mod$jags_data$x_pred) %>%
       dplyr::mutate(
@@ -402,120 +423,109 @@ par_est <- function(mod) {
       ) %>%
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
-    par_dat <- mod$m %>%
-      tidybayes::gather_draws(alpha, beta[1:2], cp,sigma) %>%
-      tidybayes::median_qi()
+    par_summary <- posterior::summarise_draws(sample_draws) %>%
+      filter(variable %in% c("alpha", "beta[1]", "beta[2]", "cp", "sigma"))
   }
 
   if (mod$model == "model_gp" | mod$model == "model_eiv_gp") {
-    m <- mod$m
-    sims_list <- mod$sims_list
-    jags_data <- mod$jags_data
-
     n_pred <- 50
     n_obs <- jags_data$n_obs
     index <- 1:n_obs
     x_star <- seq(min(jags_data$x), max(jags_data$x), length.out = n_pred)
-    par_dat <- m %>% tidybayes::spread_draws(sigma_g, phi, sigma, mu_x[index]) # posterior samples
-    par_est <- par_dat %>%
-      tidybayes::mean_qi(sigma_g, phi, sigma, mu_x) # posterior estimate for pars
+    par_est <- posterior::summarise_draws(sample_draws)
+    # posterior estimate for pars
 
+    sigma <- par_est %>% dplyr::filter(variable == "sigma") %>% dplyr::pull(median)
+    alpha <- par_est %>% dplyr::filter(variable == "alpha") %>% dplyr::pull(median)
+    phi <- par_est %>% dplyr::filter(variable == "phi") %>% dplyr::pull(median)
+    sigma_g <- par_est %>% dplyr::filter(variable == "sigma_g") %>% dplyr::pull(median)
+    mu_x <- par_est %>% dplyr::filter(!variable %in% c("sigma","alpha","phi","sigma_g","deviance")) %>% dplyr::pull(median)
     ### Predicitive distribution for the GP
 
-    Sigma <- unique(par_est$sigma) * 2 * diag(n_obs) + unique(par_est$sigma_g)^2 * exp(-(unique(par_est$phi)^2) * fields::rdist(par_est$mu_x, par_est$mu_x)^2)
-    Sigma_star <- unique(par_est$sigma_g)^2 * exp(-(unique(par_est$phi)^2) * fields::rdist(x_star, par_est$mu_x)^2)
-    Sigma_star_star <- unique(par_est$sigma_g)^2 * exp(-(unique(par_est$phi)^2) * fields::rdist(x_star, x_star)^2)
+    Sigma <- sigma * 2 * diag(n_obs) + sigma_g^2 * exp(-(phi^2) * fields::rdist(mu_x, mu_x)^2)
+    Sigma_star <- sigma_g^2 * exp(-(phi^2) * fields::rdist(x_star, mu_x)^2)
+    Sigma_star_star <- sigma_g^2 * exp(-(phi^2) * fields::rdist(x_star, x_star)^2)
 
 
     pred_mean <- Sigma_star %*% solve(Sigma, mod$dat$y)
     pred_var <- Sigma_star_star - Sigma_star %*% solve(Sigma, t(Sigma_star))
 
     ### Store results
-    pred_res <- tibble::tibble(
-      x = x_star*mod$scale_factor,
+    pred_summary <- tibble::tibble(
+      x = x_star * mod$scale_factor,
       pred_y = c(pred_mean),
       lwr_95 = pred_y - 1.96 * sqrt(diag(pred_var)),
       upr_95 = pred_y + 1.96 * sqrt(diag(pred_var))
     )
 
-    par_dat <- mod$m %>%
-      tidybayes::gather_draws(sigma,sigma_g, phi) %>%
-      tidybayes::median_qi()
+    par_summary <- posterior::summarise_draws(sample_draws) %>%
+      filter(variable %in% c("alpha", "phi", "sigma_g", "sigma"))
+
   }
 
   if (mod$model == "model_eiv_igp") {
 
-    m <- mod$m
-    sims_list <- mod$sims_list
-    jags_data <- mod$jags_data
-    n_iter <- min(dim(sims_list$w.m)[1],500)
-
-
-    #Get predictions on a grid of x values.
+    # Get predictions on a grid of x values.
     Ngrid <- jags_data$Ngrid
     xgrid <- jags_data$xstar
     xstar <- jags_data$xstar
 
     Dist <- jags_data$Dist
 
-    #Set up the matrix that will contain the estimates
-    pred <- matrix(NA,ncol=Ngrid,nrow=n_iter)
-    K.gw<-K<-K.w.inv<-array(NA,c(n_iter, Ngrid, Ngrid))
+    # Set up the matrix that will contain the estimates
+    pred <- matrix(NA, ncol = Ngrid, nrow = n_iter)
+    K.gw <- K <- K.w.inv <- array(NA, c(n_iter, Ngrid, Ngrid))
 
-    ########Initialize quadrature for the integration########
-    L=30    ## this sets the precision of the integration quadrature (higher is better but more computationally expensive)
-    index=1:L
-    cosfunc=cos(((2*index-1)*pi)/(2*L))
+    ######## Initialize quadrature for the integration########
+    L <- 30 ## this sets the precision of the integration quadrature (higher is better but more computationally expensive)
+    index <- 1:L
+    cosfunc <- cos(((2 * index - 1) * pi) / (2 * L))
 
-    quad1=array(dim=c(nrow=Ngrid,ncol=Ngrid,L))
-    quad2=array(dim=c(nrow=Ngrid,ncol=Ngrid,L))
+    quad1 <- array(dim = c(nrow = Ngrid, ncol = Ngrid, L))
+    quad2 <- array(dim = c(nrow = Ngrid, ncol = Ngrid, L))
 
-    for(j in 1:Ngrid)
+    for (j in 1:Ngrid)
     {
-      for(k in 1:Ngrid)
+      for (k in 1:Ngrid)
       {
-        quad1[k,j,]=abs((xgrid[k]*cosfunc/2)+(xgrid[k]/2)-xstar[j])^1.99
-        quad2[k,j,]=((xgrid[k]/2)*(pi/L))*(sqrt(1-cosfunc^2))
+        quad1[k, j, ] <- abs((xgrid[k] * cosfunc / 2) + (xgrid[k] / 2) - xstar[j])^1.99
+        quad2[k, j, ] <- ((xgrid[k] / 2) * (pi / L)) * (sqrt(1 - cosfunc^2))
       }
     }
 
-    #Get posterior samples of rates
+    # Get posterior samples of rates
+    w.ms <- as.matrix(sample_draws %>% dplyr::select(`w.m[1]`:`w.m[50]`))
 
-    w.ms <- sims_list$w.m[1:n_iter,]
+    # Get estimates
+    for (i in 1:n_iter) {
+      for (k in 1:Ngrid) {
+        for (j in 1:Ngrid) {
+          K.gw[i, j, k] <- sum((sample_draws$phi[i]^quad1[j, k, ]) * quad2[j, k, ]) #### Quadrature function
+        } # End j loop
+      } # End k loop
 
-
-    #Get estimates
-    for(i in 1:n_iter) {
-      for(k in 1:Ngrid) {
-        for(j in 1:Ngrid) {
-          K.gw[i,j,k]<-sum((sims_list$phi[i]^quad1[j,k,])*quad2[j,k,])  #### Quadrature function
-        } #End j loop
-      } #End k loop
-
-      K[i,,]<-sims_list$phi[i]^(Dist^1.99)
-      K.w.inv[i,,]<-solve(K[i,,])
-      pred[i,] <- sims_list$alpha[i] + K.gw[i,,]%*%K.w.inv[i,,]%*%w.ms[i,]
-    } #End i loop
-
+      K[i, , ] <- sample_draws$phi[i]^(Dist^1.99)
+      K.w.inv[i, , ] <- solve(K[i, , ])
+      pred[i, ] <- sample_draws$alpha[i] + K.gw[i, , ] %*% K.w.inv[i, , ] %*% w.ms[i, ]
+    } # End i loop
 
     ### Store results
-    pred_res <- tibble::tibble(
+    pred_summary <- tibble::tibble(
       x = seq(min(mod$dat$x), max(mod$dat$x), length.out = 50),
       pred_y = apply(pred, 2, stats::median),
       lwr_95 = apply(pred, 2, stats::quantile, probs = 0.025),
       upr_95 = apply(pred, 2, stats::quantile, probs = 0.975),
       rate_y = apply(w.ms, 2, stats::median),
       rate_lwr_95 = apply(w.ms, 2, stats::quantile, probs = 0.025),
-      rate_upr_95 = apply(w.ms, 2, stats::quantile, probs = 0.975))
+      rate_upr_95 = apply(w.ms, 2, stats::quantile, probs = 0.975)
+    )
 
-    par_dat <- mod$m %>%
-      tidybayes::gather_draws(sigma, sigma_g, phi) %>%
-      tidybayes::median_qi()
-
+    par_summary <- posterior::summarise_draws(sample_draws) %>%
+      filter(variable %in% c("phi", "sigma_g", "sigma"))
   }
 
   return(list(
-    pred_res = pred_res,
-    par_summary = par_dat
+    pred_summary = pred_summary,
+    par_summary = par_summary
   ))
 }

@@ -19,4 +19,5 @@ Get parameter estimates and model estimates
 dat <- sim_slr(n_sim = 30)
 mod <- run_mod(dat, model = "model_eiv_slr")
 par_est(mod)
+
 }

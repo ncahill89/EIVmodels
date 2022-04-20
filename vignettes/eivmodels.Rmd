@@ -54,7 +54,7 @@ To access the data that created this plot, use:
 
 ```{r}
 mod_reg_res <- par_est(mod = mod_eiv_slr)
-mod_reg_res$pred_res
+mod_reg_res$pred_summary
 ```
 
 To access a summary of the parameter estimates, use:
@@ -150,5 +150,10 @@ Let's look at the output that creates these results plots
 
 ```{r}
 mod_igp_res <- par_est(mod = mod_eiv_igp)
-mod_igp_res$pred_res
+mod_igp_res$pred_summary
+```
+Let's check parameter estimates
+
+```{r}
+mod_igp_res$par_summary
 ```

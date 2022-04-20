@@ -18,14 +18,14 @@ plot_res <- function(mod1,
 
   ## get model based estimates
   res <- par_est(mod1)
-  pred_res <- res$pred_res
+  pred_res <- res$pred_summary
   pred_res$model_label <- mod1$model
 
   ### same set up if second model is included
   if (!is.null(mod2)) {
     pred_res1 <- pred_res
     res2 <- par_est(mod2)
-    pred_res2 <- res2$pred_res
+    pred_res2 <- res2$pred_summary
     pred_res1$model_label <- mod1$model
     pred_res2$model_label <- mod2$model
     pred_res <- dplyr::full_join(pred_res1, pred_res2)
@@ -43,7 +43,7 @@ plot_res <- function(mod1,
 
   if(mod1$model == "model_eiv_igp")
   {
-  p_rate <- ggplot2::ggplot(pred_res, ggplot2::aes(x = x, y = rate_y)) +
+  p_rate <- ggplot2::ggplot(pred_res %>% tidyr::drop_na(), ggplot2::aes(x = x, y = rate_y)) +
       ggplot2::geom_line(ggplot2::aes(colour = model_label)) +
       ggplot2::geom_ribbon(ggplot2::aes(ymin = rate_lwr_95, ymax = rate_upr_95, fill = model_label), alpha = 0.4) +
       ggplot2::ylab("Rate") +
@@ -51,15 +51,31 @@ plot_res <- function(mod1,
       ggplot2::labs(colour = "", fill = "95% UI") +
       ggplot2::theme_classic()
 
-  p <- ggpubr::ggarrange(p,p_rate,ncol = 1, common.legend = TRUE,align = "h")
   }
   ### add true line if indicated
+  if(mod1$model == "model_eiv_igp")
+  {
   if (add_truth) {
-    return(p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
-             ggplot2::labs(colour = ""))
+    return(list(p = p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
+             ggplot2::labs(colour = ""),
+             p_rate = p_rate))
   }
 
   if (!add_truth) {
-    return(p)
+    return(list(p = p,
+                p_rate = p_rate))
+  }
+  }
+
+  if(mod1$model != "model_eiv_igp")
+  {
+    if (add_truth) {
+      return(p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
+                    ggplot2::labs(colour = ""))
+    }
+
+    if (!add_truth) {
+      return(p)
+    }
   }
 }
