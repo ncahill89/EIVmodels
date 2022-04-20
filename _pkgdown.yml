@@ -15,7 +15,7 @@ navbar:
       text: Slides
       menu:
       - text: Introduction to Bayesian Models
-        href: https://niamhcahill.shinyapps.io/EIVInteractive/_w_13716916/#(7)
+        href: https://rpubs.com/ncahill_stat/892739
     articles:
       text: Vignettes
       menu:
