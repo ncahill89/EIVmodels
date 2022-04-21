@@ -40,7 +40,7 @@ Now we'll fit the errors-in-variables simple linear regression model to the data
 
 ```{r}
 mod_eiv_slr <- run_mod(dat,
-                   model = "model_eiv_slr")
+                       model = "slr")
 ```
 
 Now we'll plot the model-based estimates with uncertainty. We'll overlay the true line as a comparison. 
@@ -82,7 +82,7 @@ Let's fit the EIV simple linear regression model. With these data its a good ide
 
 ```{r}
 mod_eiv_slr <- run_mod(NJ_CC,
-                       model = "model_eiv_slr",
+                       model = "slr",
                        scale_factor = 1000)
 ```
 
@@ -106,22 +106,22 @@ __EIV change-point linear regression__
 Let's fit the EIV change point linear regression model instead. All we need to do is change the model argument.
 
 ```{r}
-mod_eiv_cp1 <- run_mod(NJ_CC,
-                       model = "model_eiv_cp1",
+mod_eiv_cp <- run_mod(NJ_CC,
+                       model = "cp",
                        scale_factor = 1000)
 ```
 
 Let's get the parameter estimates
 
 ```{r}
-mod_cp_res <- par_est(mod = mod_eiv_cp1)
+mod_cp_res <- par_est(mod = mod_eiv_cp)
 mod_cp_res$par_summary
 ```
 
 Now, let's visualise the results
 
 ```{r, warning=FALSE, message=FALSE}
-plot_res(mod_eiv_cp1)
+plot_res(mod_eiv_cp)
 ```
 
 __EIV Integrated Gaussian Process__
@@ -131,7 +131,7 @@ Let's fit the EIV integrated Gaussian process model. This is a much richer model
 
 ```{r, eval = FALSE}
 mod_eiv_igp <- run_mod(NJ_CC,
-                       model = "model_eiv_igp",
+                       model = "igp",
                        scale_factor = 1000)
 ```
 

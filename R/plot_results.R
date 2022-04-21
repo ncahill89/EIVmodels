@@ -6,7 +6,7 @@
 #' @export
 #' @examples
 #' dat <- sim_slr(n_sim = 30)
-#' mod <- run_mod(dat,model = "model_eiv_slr")
+#' mod <- run_mod(dat,model = "slr")
 #' plot_res(mod)
 plot_res <- function(mod1,
                      mod2 = NULL,

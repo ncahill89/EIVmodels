@@ -1,7 +1,8 @@
 #' Fit errors-in-variables models with JAGS
 #'
 #' @param dat Input data with columns x,x_err,y,y_err
-#' @param model The model to run. Choose from model_slr, model_eiv_slr, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_slr.
+#' @param model The model to run. Choose from slr, cp, gp, igp
+#' @param EIV Indicate whether to use EIV framework. Defaults to TRUE
 #' @param iter MCMC iterations
 #' @param burnin MCMC burnin
 #' @param thin MCMC thinning
@@ -12,12 +13,13 @@
 #'
 #' @examples
 #' dat <- sim_slr(n_sim = 30)
-#' mod <- run_mod(dat, model = "model_eiv_slr")
+#' mod <- run_mod(dat, model = "slr")
 run_mod <- function(dat,
-                    model = "model_eiv_slr",
-                    iter = 15000,
-                    burnin = 5000,
-                    thin = 5,
+                    model = "slr",
+                    EIV = TRUE,
+                    iter = 5000,
+                    burnin = 1000,
+                    thin = 4,
                     scale_factor = 1) {
 
   # Simple Linear Regression Model ------------------------------------------
@@ -28,7 +30,7 @@ run_mod <- function(dat,
     x_err_st = x_err / scale_factor
   )
 
-  if (model == "model_slr") {
+  if (model == "slr" & !EIV) {
     run_model <-
       "model{
   ## Data model loop
@@ -51,7 +53,7 @@ run_mod <- function(dat,
 "
   }
 
-  if (model == "model_eiv_slr") {
+  if (model == "slr" && EIV) {
     run_model <-
       "model{
   ## Data model loop
@@ -76,7 +78,7 @@ run_mod <- function(dat,
 "
   }
 
-  if (model == "model_cp1") {
+  if (model == "cp" && EIV==FALSE) {
     run_model <- "
 
 model{
@@ -111,7 +113,7 @@ model{
 }"
   }
 
-  if (model == "model_eiv_cp1") {
+  if (model == "cp" && EIV==TRUE) {
     run_model <- "
 
 model{
@@ -149,7 +151,7 @@ model{
 }"
   }
 
-  if (model == "model_gp") {
+  if (model == "gp" && EIV==FALSE) {
     run_model <- "
 model{
 
@@ -181,7 +183,7 @@ model{
 "
   }
 
-  if (model == "model_eiv_gp") {
+  if (model == "gp" && EIV==TRUE) {
     run_model <- "
 model{
 
@@ -215,7 +217,7 @@ model{
 "
   }
 
-  if (model == "model_eiv_igp") {
+  if (model == "igp") {
     run_model <-
       "model
 {
@@ -285,7 +287,7 @@ model{
 
 
   ### Parameters to save
-  if (model == "model_gp" | model == "model_eiv_gp") {
+  if (model == "gp") {
     jags_pars <- c(
       "alpha",
       "phi",
@@ -294,7 +296,7 @@ model{
       "mu_x"
     )
   }
-  if (model == "model_slr" | model == "model_eiv_slr") {
+  if (model == "slr") {
     jags_pars <- c(
       "mu_pred",
       "y_pred",
@@ -303,7 +305,7 @@ model{
       "sigma"
     )
   }
-  if (model == "model_cp1" | model == "model_eiv_cp1") {
+  if (model == "cp") {
     jags_pars <- c(
       "mu_pred",
       "y_pred",
@@ -313,7 +315,7 @@ model{
       "cp"
     )
   }
-  if (model == "model_eiv_igp") {
+  if (model == "igp") {
     jags_pars <- c(
       "phi",
       "sigma_g",
@@ -365,7 +367,7 @@ model{
 #'
 #' @examples
 #' dat <- sim_slr(n_sim = 30)
-#' mod <- run_mod(dat, model = "model_eiv_slr")
+#' mod <- run_mod(dat, model = "slr")
 #' par_est(mod)
 #'
 par_est <- function(mod) {
@@ -383,7 +385,7 @@ par_est <- function(mod) {
     }
   jags_data <- mod$jags_data
 
-  if (mod$model == "model_slr" | mod$model == "model_eiv_slr") {
+  if (mod$model == "slr") {
     pred_summary <- sample_draws %>%
       tidyr::pivot_longer(`mu_pred[1]`:`mu_pred[50]`,
         names_to = "n",
@@ -404,7 +406,7 @@ par_est <- function(mod) {
     par_summary <- posterior::summarise_draws(sample_draws) %>% dplyr::filter(variable %in% c("alpha", "beta", "sigma"))
   }
 
-  if (mod$model == "model_cp1" | mod$model == "model_eiv_cp1") {
+  if (mod$model == "cp") {
 
     ### Store results
     pred_summary <- sample_draws %>%
@@ -427,7 +429,7 @@ par_est <- function(mod) {
       dplyr::filter(variable %in% c("alpha", "beta[1]", "beta[2]", "cp", "sigma"))
   }
 
-  if (mod$model == "model_gp" | mod$model == "model_eiv_gp") {
+  if (mod$model == "gp") {
     n_pred <- 50
     n_obs <- jags_data$n_obs
     index <- 1:n_obs
@@ -463,7 +465,7 @@ par_est <- function(mod) {
 
   }
 
-  if (mod$model == "model_eiv_igp") {
+  if (mod$model == "igp") {
 
     # Get predictions on a grid of x values.
     Ngrid <- jags_data$Ngrid

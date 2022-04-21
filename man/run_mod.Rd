@@ -6,17 +6,20 @@
 \usage{
 run_mod(
   dat,
-  model = "model_eiv_slr",
-  iter = 15000,
-  burnin = 5000,
-  thin = 5,
+  model = "slr",
+  EIV = TRUE,
+  iter = 5000,
+  burnin = 1000,
+  thin = 4,
   scale_factor = 1
 )
 }
 \arguments{
 \item{dat}{Input data with columns x,x_err,y,y_err}
 
-\item{model}{The model to run. Choose from model_slr, model_eiv_slr, model_cp, model_eiv_cp, model_gp, model_eiv_gp, model_eiv_igp. Defaults to model_eiv_slr.}
+\item{model}{The model to run. Choose from slr, cp, gp, igp}
+
+\item{EIV}{Indicate whether to use EIV framework. Defaults to TRUE}
 
 \item{iter}{MCMC iterations}
 
@@ -34,5 +37,5 @@ Fit errors-in-variables models with JAGS
 }
 \examples{
 dat <- sim_slr(n_sim = 30)
-mod <- run_mod(dat, model = "model_eiv_slr")
+mod <- run_mod(dat, model = "slr")
 }
