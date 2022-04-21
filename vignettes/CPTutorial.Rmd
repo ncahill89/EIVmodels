@@ -17,9 +17,6 @@ library(tidybayes)
 library(ggplot2)
 ```
 
-```{r klippy, echo=FALSE, include=TRUE}
-klippy::klippy()
-```
 
 ## Introduction
 
