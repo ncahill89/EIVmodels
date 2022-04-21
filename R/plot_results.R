@@ -41,7 +41,7 @@ plot_res <- function(mod1,
     ggplot2::labs(colour = "", fill = "95% UI") +
     ggplot2::theme_classic()
 
-  if(mod1$model == "model_eiv_igp")
+  if(mod1$model == "igp")
   {
   p_rate <- ggplot2::ggplot(pred_res %>% tidyr::drop_na(), ggplot2::aes(x = x, y = rate_y)) +
       ggplot2::geom_line(ggplot2::aes(colour = model_label)) +
@@ -53,7 +53,7 @@ plot_res <- function(mod1,
 
   }
   ### add true line if indicated
-  if(mod1$model == "model_eiv_igp")
+  if(mod1$model == "igp")
   {
   if (add_truth) {
     return(list(p = p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
@@ -67,7 +67,7 @@ plot_res <- function(mod1,
   }
   }
 
-  if(mod1$model != "model_eiv_igp")
+  if(mod1$model != "igp")
   {
     if (add_truth) {
       return(p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
