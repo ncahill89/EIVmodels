@@ -14,8 +14,8 @@ navbar:
     slides:
       text: Slides
       menu:
-      - text: Introduction to Bayesian Models
-        href: https://rpubs.com/ncahill_stat/892739
+      - text: Introduction to Bayesian EIV Models
+        href: https://rpubs.com/ncahill_stat/892967
     articles:
       text: Vignettes
       menu:
