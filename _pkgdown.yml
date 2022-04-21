@@ -21,7 +21,7 @@ navbar:
       menu:
       - text: Basics
         href: articles/eivmodels.html
-      - text: Change-Point Regression
+      - text: Change Point Regression
         href: articles/CPTutorial.html
     tutorials:
       text: Tutorials
