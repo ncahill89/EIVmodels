@@ -27,7 +27,7 @@ navbar:
       text: Tutorials
       menu:
       - text: GP Regression
-        href: https://rpubs.com/ncahill_stat/889056
+        href: https://www.niamhcahill.com/post/gp_tutorial/
     reference:
       text: Documentation
       href: reference/index.html
