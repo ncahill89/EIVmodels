@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The goal of EIVmodels is to fit models accounting for measurement error. 
+EIVmodels is a R package designed specifically to account for measurement errors within some commonly used models (linear regression, change-point regression, (Integrated) Gaussian process regression) when analysing time-dependent data derived from paleoenvironmental reconstructions.
 
 ## Setup
 
