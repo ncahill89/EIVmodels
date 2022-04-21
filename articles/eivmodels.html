@@ -40,7 +40,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-slides">Slides</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-slides">
-    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/892739">Introduction to Bayesian Models</a>
+    <a class="external-link dropdown-item" href="https://rpubs.com/ncahill_stat/892967">Introduction to Bayesian EIV Models</a>
   </div>
 </li>
 <li class="active nav-item dropdown">
@@ -104,16 +104,16 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 10 × 6</span></span>
 <span class="co">##        x x_err     y y_err true_y true_x</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 0.977   0.1 0.967   0.1  0.876  0.876</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 1.47    0.1 1.63    0.1  1.42   1.42 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 1.40    0.1 1.49    0.1  1.39   1.39 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 1.71    0.1 1.90    0.1  1.79   1.79 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.411   0.1 0.583   0.1  0.483  0.483</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 1.38    0.1 1.40    0.1  1.47   1.47 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.352   0.1 0.622   0.1  0.456  0.456</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 2.02    0.1 2.01    0.1  1.92   1.92 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 1.42    0.1 1.42    0.1  1.51   1.51 </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 0.567   0.1 0.553   0.1  0.557  0.557</span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 1.31    0.1 1.56    0.1  1.39   1.39 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.975   0.1 0.954   0.1  0.766  0.766</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.725   0.1 0.888   0.1  0.732  0.732</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 0.736   0.1 0.768   0.1  0.798  0.798</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.491   0.1 0.458   0.1  0.536  0.536</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 1.48    0.1 1.46    0.1  1.44   1.44 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.853   0.1 1.07    0.1  0.776  0.776</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 1.47    0.1 1.58    0.1  1.60   1.60 </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.830   0.1 0.998   0.1  0.949  0.949</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 0.613   0.1 0.557   0.1  0.587  0.587</span></code></pre>
 <p>Next we’ll plot the simulated data and we’ll add the true regression line to the plot by adding the argument <code>add_truth = TRUE</code> to the <code><a href="../reference/plot_dat.html">plot_dat()</a></code> function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_dat.html">plot_dat</a></span><span class="op">(</span><span class="va">dat</span>,
@@ -146,16 +146,16 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 50 × 4</span></span>
 <span class="co">##        x pred_y lwr_95 upr_95</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 0.352  0.510  0.337  0.680</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.386  0.542  0.374  0.710</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.420  0.575  0.412  0.738</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 0.454  0.608  0.449  0.767</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.488  0.641  0.488  0.794</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.522  0.673  0.525  0.822</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.556  0.706  0.562  0.850</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 0.590  0.739  0.600  0.879</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.624  0.772  0.636  0.910</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 0.658  0.805  0.673  0.937</span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 0.491  0.567  0.385  0.733</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.512  0.590  0.408  0.753</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.532  0.611  0.434  0.772</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 0.552  0.632  0.464  0.790</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.572  0.653  0.491  0.810</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.593  0.676  0.519  0.828</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.613  0.698  0.548  0.844</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 0.633  0.719  0.576  0.861</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.653  0.741  0.604  0.878</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 0.673  0.763  0.633  0.895</span>
 <span class="co">## <span style="color: #949494;"># … with 40 more rows</span></span></code></pre>
 <p>To access a summary of the parameter estimates, use:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -163,9 +163,9 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 10</span></span>
 <span class="co">##   variable   mean median     sd    mad       q5   q95  rhat ess_bulk ess_tail</span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> alpha    0.168  0.170  0.118  0.114  -<span style="color: #BB0000;">0.032</span><span style="color: #BB0000; text-decoration: underline;">4</span>  0.358  1.01     868.     910.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> beta     0.969  0.968  0.093<span style="text-decoration: underline;">5</span> 0.090<span style="text-decoration: underline;">9</span>  0.824   1.13   1.01     822.     964.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> sigma    0.064<span style="text-decoration: underline;">8</span> 0.053<span style="text-decoration: underline;">0</span> 0.053<span style="text-decoration: underline;">1</span> 0.046<span style="text-decoration: underline;">4</span>  0.005<span style="text-decoration: underline;">53</span> 0.162  1.00     922.     944.</span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;">1</span> alpha    0.026<span style="text-decoration: underline;">5</span> 0.035<span style="text-decoration: underline;">6</span> 0.166  0.145  -<span style="color: #BB0000;">0.262</span>   0.264 1.00     <span style="text-decoration: underline;">1</span>008.    <span style="text-decoration: underline;">1</span>000.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> beta     1.10   1.09   0.173  0.156   0.843   1.39  1.00     <span style="text-decoration: underline;">1</span>013.    <span style="text-decoration: underline;">1</span>015.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> sigma    0.076<span style="text-decoration: underline;">8</span> 0.062<span style="text-decoration: underline;">5</span> 0.064<span style="text-decoration: underline;">0</span> 0.055<span style="text-decoration: underline;">3</span>  0.006<span style="text-decoration: underline;">38</span> 0.192 0.999    <span style="text-decoration: underline;">1</span>057.     905.</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="example---using-real-data">Example - Using real data<a class="anchor" aria-label="anchor" href="#example---using-real-data"></a>
@@ -214,9 +214,9 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 10</span></span>
 <span class="co">##   variable    mean  median     sd    mad       q5     q95  rhat ess_bulk</span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> alpha    -<span style="color: #BB0000;">4.06</span>   -<span style="color: #BB0000;">4.06</span>   0.170  0.163  -<span style="color: #BB0000;">4.34</span>    -<span style="color: #BB0000;">3.77</span>   0.999    <span style="text-decoration: underline;">1</span>014.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> beta      1.90    1.90   0.093<span style="text-decoration: underline;">9</span> 0.090<span style="text-decoration: underline;">5</span>  1.75     2.05   0.999    <span style="text-decoration: underline;">1</span>019.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> sigma     0.016<span style="text-decoration: underline;">3</span>  0.013<span style="text-decoration: underline;">9</span> 0.012<span style="text-decoration: underline;">6</span> 0.011<span style="text-decoration: underline;">7</span>  0.001<span style="text-decoration: underline;">13</span>  0.041<span style="text-decoration: underline;">3</span> 1.00     <span style="text-decoration: underline;">1</span>015.</span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> alpha    -<span style="color: #BB0000;">4.07</span>   -<span style="color: #BB0000;">4.06</span>   0.184  0.188  -<span style="color: #BB0000;">4.38</span>    -<span style="color: #BB0000;">3.78</span>    1.00     919.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> beta      1.91    1.90   0.102  0.106   1.74     2.08    1.00     920.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> sigma     0.017<span style="text-decoration: underline;">5</span>  0.015<span style="text-decoration: underline;">0</span> 0.013<span style="text-decoration: underline;">4</span> 0.013<span style="text-decoration: underline;">0</span>  0.001<span style="text-decoration: underline;">30</span>  0.043<span style="text-decoration: underline;">9</span>  1.00     945.</span>
 <span class="co">## <span style="color: #949494;"># … with 1 more variable: ess_tail &lt;dbl&gt;</span></span></code></pre>
 <p>Based on this model, the rate of sea level change is 1.9 mm/yr (95% UI: 1.7 to 2.1 mm/yr)</p>
 <p>Now, let’s visualise the results</p>
@@ -246,11 +246,11 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 10</span></span>
 <span class="co">##   variable    mean  median     sd    mad       q5     q95  rhat ess_bulk</span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> alpha    -<span style="color: #BB0000;">0.595</span>  -<span style="color: #BB0000;">0.593</span>  0.153  0.156  -<span style="color: #BB0000;">0.868</span>   -<span style="color: #BB0000;">0.365</span>  1.00      962.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> beta[1]   1.47    1.52   0.307  0.243   0.979    1.83   1.00      963.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> beta[2]   4.37    3.66   2.30   0.924   2.47     9.15   0.999     954.</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> cp        1.87    1.87   0.069<span style="text-decoration: underline;">3</span> 0.061<span style="text-decoration: underline;">3</span>  1.75     1.96   1.00      969.</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> sigma     0.014<span style="text-decoration: underline;">2</span>  0.011<span style="text-decoration: underline;">8</span> 0.011<span style="text-decoration: underline;">0</span> 0.010<span style="text-decoration: underline;">5</span>  0.001<span style="text-decoration: underline;">08</span>  0.034<span style="text-decoration: underline;">0</span> 0.999     877.</span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> alpha    -<span style="color: #BB0000;">0.581</span>  -<span style="color: #BB0000;">0.577</span>  0.139  0.146  -<span style="color: #BB0000;">0.813</span>   -<span style="color: #BB0000;">0.361</span>  1.00     <span style="text-decoration: underline;">1</span>036.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> beta[1]   1.50    1.54   0.259  0.239   1.04     1.88   0.999    <span style="text-decoration: underline;">1</span>031.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> beta[2]   4.32    3.68   2.27   0.976   2.58     8.74   1.00     <span style="text-decoration: underline;">1</span>057.</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> cp        1.88    1.88   0.057<span style="text-decoration: underline;">5</span> 0.056<span style="text-decoration: underline;">5</span>  1.78     1.96   1.00     <span style="text-decoration: underline;">1</span>023.</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> sigma     0.014<span style="text-decoration: underline;">6</span>  0.012<span style="text-decoration: underline;">1</span> 0.011<span style="text-decoration: underline;">4</span> 0.011<span style="text-decoration: underline;">1</span>  0.001<span style="text-decoration: underline;">04</span>  0.038<span style="text-decoration: underline;">1</span> 0.999     848.</span>
 <span class="co">## <span style="color: #949494;"># … with 1 more variable: ess_tail &lt;dbl&gt;</span></span></code></pre>
 <p>Now, let’s visualise the results</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -277,16 +277,16 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 50 × 7</span></span>
 <span class="co">##        x pred_y lwr_95 upr_95 rate_y rate_lwr_95 rate_upr_95</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>509   -<span style="color: #BB0000;">1.12</span>  -<span style="color: #BB0000;">1.21</span> -<span style="color: #BB0000;">1.04</span>   0.923     -<span style="color: #BB0000;">0.074</span><span style="color: #BB0000; text-decoration: underline;">7</span>        1.95</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>519.  -<span style="color: #BB0000;">1.12</span>  -<span style="color: #BB0000;">1.20</span> -<span style="color: #BB0000;">1.04</span>   0.955      0.010<span style="text-decoration: underline;">1</span>        1.93</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>529.  -<span style="color: #BB0000;">1.11</span>  -<span style="color: #BB0000;">1.18</span> -<span style="color: #BB0000;">1.03</span>   0.983      0.074<span style="text-decoration: underline;">7</span>        1.91</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>539.  -<span style="color: #BB0000;">1.10</span>  -<span style="color: #BB0000;">1.17</span> -<span style="color: #BB0000;">1.03</span>   1.02       0.177         1.90</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>549.  -<span style="color: #BB0000;">1.08</span>  -<span style="color: #BB0000;">1.15</span> -<span style="color: #BB0000;">1.02</span>   1.05       0.240         1.87</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>559.  -<span style="color: #BB0000;">1.07</span>  -<span style="color: #BB0000;">1.14</span> -<span style="color: #BB0000;">1.02</span>   1.08       0.337         1.87</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>569.  -<span style="color: #BB0000;">1.06</span>  -<span style="color: #BB0000;">1.12</span> -<span style="color: #BB0000;">1.01</span>   1.12       0.396         1.85</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>578.  -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">1.11</span> -<span style="color: #BB0000;">0.999</span>  1.16       0.477         1.85</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>588.  -<span style="color: #BB0000;">1.04</span>  -<span style="color: #BB0000;">1.09</span> -<span style="color: #BB0000;">0.989</span>  1.19       0.552         1.83</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>598.  -<span style="color: #BB0000;">1.03</span>  -<span style="color: #BB0000;">1.08</span> -<span style="color: #BB0000;">0.978</span>  1.23       0.621         1.84</span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>509   -<span style="color: #BB0000;">1.12</span>  -<span style="color: #BB0000;">1.21</span> -<span style="color: #BB0000;">1.04</span>   0.941     -<span style="color: #BB0000;">0.108</span>         1.98</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>519.  -<span style="color: #BB0000;">1.11</span>  -<span style="color: #BB0000;">1.20</span> -<span style="color: #BB0000;">1.04</span>   0.973     -<span style="color: #BB0000;">0.029</span><span style="color: #BB0000; text-decoration: underline;">1</span>        1.96</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>529.  -<span style="color: #BB0000;">1.10</span>  -<span style="color: #BB0000;">1.18</span> -<span style="color: #BB0000;">1.04</span>   1.00       0.037<span style="text-decoration: underline;">1</span>        1.96</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>539.  -<span style="color: #BB0000;">1.10</span>  -<span style="color: #BB0000;">1.16</span> -<span style="color: #BB0000;">1.03</span>   1.03       0.114         1.93</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>549.  -<span style="color: #BB0000;">1.08</span>  -<span style="color: #BB0000;">1.15</span> -<span style="color: #BB0000;">1.02</span>   1.06       0.196         1.92</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>559.  -<span style="color: #BB0000;">1.07</span>  -<span style="color: #BB0000;">1.14</span> -<span style="color: #BB0000;">1.02</span>   1.09       0.286         1.91</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>569.  -<span style="color: #BB0000;">1.06</span>  -<span style="color: #BB0000;">1.12</span> -<span style="color: #BB0000;">1.01</span>   1.12       0.381         1.90</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>578.  -<span style="color: #BB0000;">1.05</span>  -<span style="color: #BB0000;">1.11</span> -<span style="color: #BB0000;">1.00</span>   1.15       0.481         1.90</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>588.  -<span style="color: #BB0000;">1.04</span>  -<span style="color: #BB0000;">1.10</span> -<span style="color: #BB0000;">0.987</span>  1.19       0.565         1.86</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>598.  -<span style="color: #BB0000;">1.03</span>  -<span style="color: #BB0000;">1.08</span> -<span style="color: #BB0000;">0.974</span>  1.22       0.636         1.88</span>
 <span class="co">## <span style="color: #949494;"># … with 40 more rows</span></span></code></pre>
 <p>Let’s check parameter estimates</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -294,9 +294,9 @@
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 10</span></span>
 <span class="co">##   variable   mean median     sd    mad      q5     q95  rhat ess_bulk ess_tail</span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> phi      0.399  0.360  0.258  0.307  0.037<span style="text-decoration: underline;">5</span>   0.853   1.00    <span style="text-decoration: underline;">1</span>066.     777.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> sigma    0.014<span style="text-decoration: underline;">9</span> 0.012<span style="text-decoration: underline;">6</span> 0.011<span style="text-decoration: underline;">2</span> 0.011<span style="text-decoration: underline;">2</span> 0.001<span style="text-decoration: underline;">19</span>  0.035<span style="text-decoration: underline;">8</span>  1.00     834.     908.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> sigma_g  3.77   2.90   3.10   1.68   0.978   10.2     1.00    <span style="text-decoration: underline;">1</span>056.     976.</span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;">1</span> phi      0.394  0.352  0.259  0.305  0.046<span style="text-decoration: underline;">1</span>   0.842  0.999     903.     905.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> sigma    0.015<span style="text-decoration: underline;">1</span> 0.013<span style="text-decoration: underline;">1</span> 0.011<span style="text-decoration: underline;">3</span> 0.012<span style="text-decoration: underline;">0</span> 0.001<span style="text-decoration: underline;">21</span>  0.036<span style="text-decoration: underline;">9</span> 1.01      893.     902.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> sigma_g  3.86   2.90   3.29   1.69   0.959   11.9    1.00     <span style="text-decoration: underline;">1</span>025.     907.</span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
