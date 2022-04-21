@@ -2,8 +2,9 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
+  CPTutorial: CPTutorial.html
   eivmodels: eivmodels.html
-last_built: 2022-04-21T21:44Z
+last_built: 2022-04-21T23:27Z
 urls:
   reference: https://ncahill89.github.io/EIVmodels/reference
   article: https://ncahill89.github.io/EIVmodels/articles
