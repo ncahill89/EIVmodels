@@ -19,8 +19,7 @@ library(EIVmodels)
 
 ## Example - Simple Linear Regression
 
-This package provides options to simulate data from different types of models where there is measurement error in both the `x` and `y` variable. We'll start by simulating some data from a linear regression model with measurement error. Below I'm simulating 20 data points where the intercept ($\alpha$) = 0, slope ($\beta$) = 1. The measurement errors for $y$ and $x$ are set to 0.1. 
-
+This package provides options to simulate data from different types of models where there is measurement error in both the `x` and `y` variable. We'll start by simulating some data from a linear regression model with measurement error. The default range for $x$ is 0 to 2. I'm simulating 20 data points where the intercept ($\alpha$) = 0, slope ($\beta$) = 1. The measurement errors for $y$ and $x$ are set to 0.1. 
 ```{r}
 dat <- sim_slr(n_sim = 20,
                alpha = 0,
