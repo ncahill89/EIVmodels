@@ -1,9 +1,14 @@
 ---
 title: "Bayesian Errors-in-Variables Change-Point Linear Regression"
-author: "Dr Niamh Cahill (she/her)"
-date: ""
-output: html_document
+description: >
+  Learn how to get started
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to EIVmodels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -20,14 +25,9 @@ klippy::klippy()
 
 Here I am going to give you a starting point for fitting a Bayesian errors-in-variables, change-point regression model for unevenly spaced time series data, assuming a single change point and measurement errors. We'll start by simulating some data with a known change point and then we'll see if the change-point model can detect it.
 
-## Install packages and JAGS
+## Setup
 
-Firstly, the package we're using requires the installation of JAGS (Just Another Gibbs Sampler) to do the MCMC sampling. If you don't have it then you will need to install it (<http://mcmc-jags.sourceforge.net>). 
-
-Next, install the package `EIVmodels` from github.
-
-```{r,eval = FALSE}
-devtools::install_github("ncahill89/EIVmodels")
+```{r}
 library(EIVmodels)
 ```
 
