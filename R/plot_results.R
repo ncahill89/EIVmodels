@@ -19,15 +19,15 @@ plot_res <- function(mod1,
   ## get model based estimates
   res <- par_est(mod1)
   pred_res <- res$pred_summary
-  pred_res$model_label <- mod1$model
+  pred_res$model_label <- ifelse(EIV, mod1$model,paste0("eiv-",mod1$model))
 
   ### same set up if second model is included
   if (!is.null(mod2)) {
     pred_res1 <- pred_res
     res2 <- par_est(mod2)
     pred_res2 <- res2$pred_summary
-    pred_res1$model_label <- mod1$model
-    pred_res2$model_label <- mod2$model
+    pred_res1$model_label <- ifelse(EIV, mod1$model,paste0("eiv-",mod1$model))
+    pred_res2$model_label <- ifelse(EIV, mod2$model,paste0("eiv-",mod2$model))
     pred_res <- dplyr::full_join(pred_res1, pred_res2)
   }
 

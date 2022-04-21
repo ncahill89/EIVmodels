@@ -351,6 +351,7 @@ model{
   return(list(
     sample_draws = sample_draws,
     model = model,
+    EIV = EIV,
     dat = dat,
     jags_data = jags_data,
     scale_factor = scale_factor
