@@ -77,7 +77,7 @@ We need priors for all unknown parameters. The prior on the change point should 
 
 If you are interested in digging deeper in to the model specification, here is the JAGS specification for this particular model, otherwise feel free to ignore this next part and move straight to the [Simulate data] section. 
 
-```{r, class.source='klippy'}
+```{r}
 cp_model <-
 'model{
 
