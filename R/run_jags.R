@@ -369,7 +369,7 @@ model{
 
   # Priors
   sigma_g ~ dt(0,2^-2,1)T(0,)
-  phi ~ dunif(0,1)
+  phi ~ dbeta(2,10)
   sigma ~ dt(0,2^-2,1)T(0,)
   alpha ~ dnorm(0,2^-2)
   beta ~ dnorm(0,2^-2)
