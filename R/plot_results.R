@@ -40,8 +40,7 @@ plot_res <- function(mod1,
     ggplot2::xlab("X") +
     ggplot2::labs(colour = "", fill = "95% UI") +
     ggplot2::theme_classic()
-
-  if(mod1$model == "igp")
+  if(ncol(pred_res) == 8)
   {
   p_rate <- ggplot2::ggplot(pred_res %>% tidyr::drop_na(), ggplot2::aes(x = x, y = rate_y)) +
       ggplot2::geom_line(ggplot2::aes(colour = model_label)) +
@@ -53,7 +52,7 @@ plot_res <- function(mod1,
 
   }
   ### add true line if indicated
-  if(mod1$model == "igp")
+  if(ncol(pred_res) == 8)
   {
   if (add_truth) {
     return(list(p = p + ggplot2::geom_line(data = mod1$dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +

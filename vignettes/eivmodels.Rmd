@@ -78,7 +78,7 @@ Let's plot the data
 plot_dat(NJ_CC)
 ```
 
-__EIV simple linear regression__
+### EIV simple linear regression
 
 Let's fit the EIV simple linear regression model. With these data its a good idea to scale the age data. Dividing my 1000 is useful here, as the relative sea level data ($y$) is in metres, dividing by 1000 means the slope (rate of change) is still easily interpreted in relation to the original scale of the data. In this case the slope can be interpreted in mm/yr.
 
@@ -103,7 +103,7 @@ Now, let's visualise the results
 plot_res(mod_eiv_slr)
 ```
 
-__EIV change-point linear regression__
+### EIV change-point linear regression
 
 Let's fit the EIV change point linear regression model instead. All we need to do is change the model argument to "cp".
 
@@ -126,9 +126,44 @@ Now, let's visualise the results
 plot_res(mod_eiv_cp)
 ```
 
-__EIV Integrated Gaussian Process__
+### EIV Gaussian Process
 
-Let's fit the EIV integrated Gaussian process model. This is a much richer model and will take longer to run than the others. However, an advantage is that it  provides the underlying rate process as well as the sea level process over time. 
+Let's fit the EIV Gaussian process model. This will take longer to run than the others (about 25 minutes for the `NJ_CC` data). Rates will be provided with this model but they are approximated using a method of finite differences. If rates are of interest it is recommended to use the [EIV Integrated Gaussian Process] model instead.  
+
+```{r, eval = FALSE}
+mod_eiv_gp <- run_mod(NJ_CC,
+                       model = "gp",
+                       scale_factor = 1000)
+```
+
+```{r, echo = FALSE, include=FALSE}
+mod_eiv_gp <- readRDS("mod_eiv_gp.rds")
+```
+
+Let's visualise the results
+
+```{r, warning=FALSE, message=FALSE}
+plot_res(mod_eiv_gp)
+```
+
+
+Let's look at the output that creates these results plots
+
+```{r}
+mod_gp_res <- par_est(mod = mod_eiv_gp)
+mod_gp_res$pred_summary
+```
+
+Let's check parameter estimates
+
+```{r}
+mod_gp_res$par_summary
+```
+
+
+### EIV Integrated Gaussian Process
+
+Let's fit the EIV integrated Gaussian process model. This is a much richer model and will also take longer to run than than the simpler models. However, an advantage is that it  provides the underlying rate process directly from the model.
 
 
 ```{r, eval = FALSE}

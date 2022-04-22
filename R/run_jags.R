@@ -556,15 +556,15 @@ par_est <- function(mod) {
     index <- 1:n_obs
     x_star <- seq(min(jags_data$x), max(jags_data$x), length.out = n_pred)
     par_est <- posterior::summarise_draws(sample_draws)
-    # posterior estimate for pars
 
+    # posterior estimate for pars
     sigma <- par_est %>% dplyr::filter(variable == "sigma") %>% dplyr::pull(median)
     alpha <- par_est %>% dplyr::filter(variable == "alpha") %>% dplyr::pull(median)
     phi <- par_est %>% dplyr::filter(variable == "phi") %>% dplyr::pull(median)
     sigma_g <- par_est %>% dplyr::filter(variable == "sigma_g") %>% dplyr::pull(median)
     mu_x <- par_est %>% dplyr::filter(!variable %in% c("sigma","alpha","phi","sigma_g","deviance")) %>% dplyr::pull(median)
-    ### Predicitive distribution for the GP
 
+    ### Predicitive distribution for the GP
     Sigma <- sigma * 2 * diag(n_obs) + sigma_g^2 * exp(-(phi^2) * fields::rdist(mu_x, mu_x)^2)
     Sigma_star <- sigma_g^2 * exp(-(phi^2) * fields::rdist(x_star, mu_x)^2)
     Sigma_star_star <- sigma_g^2 * exp(-(phi^2) * fields::rdist(x_star, x_star)^2)
@@ -573,12 +573,38 @@ par_est <- function(mod) {
     pred_mean <- Sigma_star %*% solve(Sigma, mod$dat$y)
     pred_var <- Sigma_star_star - Sigma_star %*% solve(Sigma, t(Sigma_star))
 
+    temp <- mvtnorm::rmvnorm(1000,pred_mean,pred_var)
+    deriv <- matrix(NA, nrow = 500, ncol = length(jags_data$x_pred_st))
+    newD <- jags_data$x_pred_st
+
+    for(i in 1:500)
+    {
+      dat <- tibble::tibble(x = mod$jags_data$x_pred_st, y = temp[i,])
+      gam_mod <- mgcv::gamm(y ~ s(x, k = 30), data = dat)
+      gam_mod <- gam_mod$gam
+      X0 <- mgcv::predict.gam(gam_mod, data.frame(x=newD), type = "lpmatrix")
+      newD <- newD + 1e-7
+      X1 <- mgcv::predict.gam(gam_mod, data.frame(x=newD), type = "lpmatrix")
+      Xp <- (X1 - X0) / 1e-7
+      Xp.r <- NROW(Xp)
+      Xp.c <- NCOL(Xp)
+      # number of smooth terms
+      Xi <- Xp * 0
+      want <- grep("x", colnames(X1))
+      Xi[, want] <- Xp[, want]
+      df <- Xi %*% coef(gam_mod)
+      deriv[i,] = c(df)
+    }
+
     ### Store results
     pred_summary <- tibble::tibble(
       x = x_star * mod$scale_factor,
       pred_y = c(pred_mean),
       lwr_95 = pred_y - 1.96 * sqrt(diag(pred_var)),
-      upr_95 = pred_y + 1.96 * sqrt(diag(pred_var))
+      upr_95 = pred_y + 1.96 * sqrt(diag(pred_var)),
+      rate_y = apply(deriv,2,median),
+      rate_lwr_95 = apply(deriv,2,quantile, probs = 0.025),
+      rate_upr_95 = apply(deriv,2,quantile, probs = 0.975)
     )
 
     par_summary <- posterior::summarise_draws(sample_draws) %>%

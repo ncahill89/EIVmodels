@@ -21,6 +21,7 @@ Imports:
     ggplot2,
     ggpubr,
     magrittr,
+    mgcv,
     mvtnorm,
     posterior,
     R2jags,

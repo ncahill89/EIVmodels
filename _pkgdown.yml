@@ -5,8 +5,8 @@ navbar:
   structure:
     left:
     - home
-    - slides
     - articles
+    - slides
     - tutorials
     - reference
     - news
