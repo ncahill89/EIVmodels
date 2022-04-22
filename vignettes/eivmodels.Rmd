@@ -67,7 +67,7 @@ mod_reg_res$par_summary
 
 ## Example - Using real data
 
-The package contains a dataset called `NJ_CC` which is subset of a sea level reconstruction from New Jersey, USA. Note the format of the dataset. This is the format you should use for any data you want to apply these models to. 
+The package contains a dataset called `NJ_CC` which is subset of a sea level reconstruction from New Jersey, USA (details of the full record can be found in [this paper](https://cp.copernicus.org/articles/12/525/2016/)). Note the format of the dataset. This is the format you should use for any data you want to apply these models to. 
 
 ```{r}
 EIVmodels::NJ_CC
@@ -163,7 +163,7 @@ mod_gp_res$par_summary
 
 ### EIV Integrated Gaussian Process
 
-Let's fit the EIV integrated Gaussian process model. This is a much richer model and will also take longer to run than than the simpler models. However, an advantage is that it  provides the underlying rate process directly from the model.
+Let's fit the EIV integrated Gaussian process model. This is a much richer model and will also take longer to run than than the simpler models (~ 12 minutes for the `NJ_CC` dataset). However, an advantage is that it  provides the underlying rate process directly from the model. Details of this model can be found in [this paper](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-9/issue-2/Modeling-sea-level-change-using-errors-in-variables-integrated-Gaussian/10.1214/15-AOAS824.full).
 
 
 ```{r, eval = FALSE}
