@@ -3,6 +3,7 @@
 #' @param dat Input data with columns x,x_err,y,y_err
 #' @param model The model to run. Choose from slr, cp, gp, igp
 #' @param EIV Indicate whether to use EIV framework. Defaults to TRUE
+#' @param n_cp Number of change points if model = "cp" is chosen. Can choose from 1,2,3,4.
 #' @param iter MCMC iterations
 #' @param burnin MCMC burnin
 #' @param thin MCMC thinning
@@ -17,6 +18,7 @@
 run_mod <- function(dat,
                     model = "slr",
                     EIV = TRUE,
+                    n_cp = 1,
                     iter = 5000,
                     burnin = 1000,
                     thin = 4,
@@ -29,6 +31,8 @@ run_mod <- function(dat,
     x_st = x / scale_factor,
     x_err_st = x_err / scale_factor
   )
+
+  myinitial <- NULL
 
   if (model == "slr" & !EIV) {
     run_model <-
@@ -79,6 +83,8 @@ run_mod <- function(dat,
   }
 
   if (model == "cp" && EIV==FALSE) {
+
+    if(n_cp == 1){
     run_model <- "
 
 model{
@@ -111,9 +117,58 @@ model{
 
 
 }"
+    }
+
+    if(n_cp == 2){
+      run_model <- "
+
+model{
+####CP Regression model
+
+  ###Data Loop
+    for(j in 1:n_obs)
+  {
+  y[j]~dnorm(mu_y[j],tau[j])
+  A[j] <- step(x[j]-cp[1])
+  C[j] <- 1+step(x[j]-cp[2])
+  mu_y[j] <- alpha[C[j]] + beta[A[j] + C[j]]*(x[j]-cp[C[j]])
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
+  }
+
+  ##Priors
+  alpha[1] ~ dnorm(0.0,0.01)
+  alpha[2] ~ dnorm(0.0,0.01)
+
+  beta[1]~dnorm(0.0,0.01)
+  beta[2] <- (alpha[2] - alpha[1])/(cp[2]-cp[1])
+  beta[3]~dnorm(0.0,0.01)
+
+  sigma ~ dt(0,4^-2,1)T(0,)
+
+  cp.temp[1] ~ dunif(x_min,x_max)
+  cp.temp[2] ~ dunif(x_min,x_max)
+
+  cp[1:2]<-sort(cp.temp)
+
+  for(i in 1:n_pred)
+  {
+  Astar[i] <- step(x_pred_st[i]-cp[1])
+  Cstar[i] <- 1+step(x_pred_st[i]-cp[2])
+  mu_pred[i] <- alpha[Cstar[i]] + beta[Astar[i] + Cstar[i]]*(x_pred_st[i]-cp[Cstar[i]])
+  }
+
+
+}"
+      myinitial <- function(){list("alpha"=c(rnorm(2,0,3)),
+                                   "beta"=c(rnorm(1,0,3),NA,rnorm(1,0,3)),
+                                   "cp.temp" = c(runif(2,min(dat$x_st),max(dat$x_st))))}
+    }
+
   }
 
   if (model == "cp" && EIV==TRUE) {
+
+    if(n_cp == 1){
     run_model <- "
 
 model{
@@ -149,6 +204,59 @@ model{
 
 
 }"
+    }
+
+    if(n_cp == 2){
+      run_model <- "
+
+model{
+####CP Regression model
+
+  ###Data Loop
+    for(j in 1:n_obs)
+  {
+  y[j]~dnorm(mu_y[j],tau[j])
+  x[j] ~ dnorm(mu_x[j],x_err[j]^-2)
+  A[j] <- step(mu_x[j]-cp[1])
+  C[j] <- 1+step(mu_x[j]-cp[2])
+
+  mu_x[j] ~ dnorm(0,0.5^-2)
+  mu_y[j] <- alpha[C[j]] + beta[A[j] + C[j]]*(mu_x[j]-cp[C[j]])
+
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
+
+  }
+
+  ##Priors
+  alpha[1] ~ dnorm(0.0,0.01)
+  alpha[2] ~ dnorm(0.0,0.01)
+
+  beta[1]~dnorm(0.0,0.01)
+  beta[2] <- (alpha[2] - alpha[1])/(cp[2]-cp[1])
+  beta[3]~dnorm(0.0,0.01)
+
+  sigma ~ dt(0,4^-2,1)T(0,)
+
+  cp.temp[1] ~ dunif(x_min,x_max)
+  cp.temp[2] ~ dunif(x_min,x_max)
+
+  cp[1:2]<-sort(cp.temp)
+
+  for(i in 1:n_pred)
+  {
+  Astar[i] <- step(x_pred_st[i]-cp[1])
+  Cstar[i] <- 1+step(x_pred_st[i]-cp[2])
+  mu_pred[i] <- alpha[Cstar[i]] + beta[Astar[i] + Cstar[i]]*(x_pred_st[i]-cp[Cstar[i]])
+  }
+
+
+
+}"
+
+      myinitial <- function(){list("alpha"=c(rnorm(2,0,3)),
+                                   "beta"=c(rnorm(1,0,3),NA,rnorm(1,0,3)),
+                                   "cp.temp" = c(runif(2,min(dat$x_st),max(dat$x_st))))}
+    }
   }
 
   if (model == "gp" && EIV==FALSE) {
@@ -282,7 +390,8 @@ model{
     x_pred_st = seq(min(dat$x_st), max(dat$x_st), length.out = 50),
     x_pred = seq(min(dat$x), max(dat$x), length.out = 50),
     x_min = min(dat$x_st),
-    x_max = max(dat$x_st)
+    x_max = max(dat$x_st),
+    n_cp = n_cp
   )
 
 
@@ -336,7 +445,8 @@ model{
     model.file = textConnection(run_model),
     n.iter = iter,
     n.burnin = burnin,
-    n.thin = thin
+    n.thin = thin,
+    inits = myinitial
   ))
 
 
@@ -426,8 +536,18 @@ par_est <- function(mod) {
       ) %>%
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
+    if(jags_data$n_cp == 1)
+    {
     par_summary <- posterior::summarise_draws(sample_draws) %>%
       dplyr::filter(variable %in% c("alpha", "beta[1]", "beta[2]", "cp", "sigma"))
+    }
+
+    if(jags_data$n_cp == 2)
+    {
+      par_summary <- posterior::summarise_draws(sample_draws) %>%
+        dplyr::filter(variable %in% c("alpha[1]","alpha[2]", "beta[1]", "beta[2]","beta[3]", "cp[1]","cp[2]", "sigma"))
+    }
+
   }
 
   if (mod$model == "gp") {

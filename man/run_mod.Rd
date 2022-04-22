@@ -8,6 +8,7 @@ run_mod(
   dat,
   model = "slr",
   EIV = TRUE,
+  n_cp = 1,
   iter = 5000,
   burnin = 1000,
   thin = 4,
@@ -20,6 +21,8 @@ run_mod(
 \item{model}{The model to run. Choose from slr, cp, gp, igp}
 
 \item{EIV}{Indicate whether to use EIV framework. Defaults to TRUE}
+
+\item{n_cp}{Number of change points if model = "cp" is chosen. Can choose from 1,2,3,4.}
 
 \item{iter}{MCMC iterations}
 
