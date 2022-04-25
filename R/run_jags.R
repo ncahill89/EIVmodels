@@ -368,7 +368,7 @@ model{
   w.tilde.m<-K.gw%*%K.w.inv%*%w.m
 
   # Priors
-  sigma_g ~ dt(0,2^-2,1)T(0,)
+  sigma_g ~ dt(0,2^-2,1)T(0,4)
   phi ~ dbeta(2,10)
   sigma ~ dt(0,2^-2,1)T(0,4)
   alpha ~ dnorm(0,2^-2)
