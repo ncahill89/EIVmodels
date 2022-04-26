@@ -5,7 +5,7 @@
 \alias{NJ_CC}
 \title{A sea level reconstruction from New Jersey, USA.}
 \format{
-A data frame with 135 rows and 4 variables:
+A data frame with 50 rows and 4 variables:
 \describe{
   \item{x}{age, in year CE}
   \item{y}{relative sea level in metres}

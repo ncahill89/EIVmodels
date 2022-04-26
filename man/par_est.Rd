@@ -7,10 +7,10 @@
 par_est(mod)
 }
 \arguments{
-\item{mod}{Fitted model object}
+\item{mod}{Fitted model object from \code{\link{run_mod}}}
 }
 \value{
-List with model estimates (pred_res) and parameter estimates (par_summary)
+List with model estimates (pred_summary) and parameter estimates (par_summary)
 }
 \description{
 Get parameter estimates and model estimates

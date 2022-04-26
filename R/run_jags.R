@@ -471,9 +471,9 @@ model{
 
 #' Get parameter estimates and model estimates
 #'
-#' @param mod Fitted model object
+#' @param mod Fitted model object from \code{\link{run_mod}}
 #'
-#' @return List with model estimates (pred_res) and parameter estimates (par_summary)
+#' @return List with model estimates (pred_summary) and parameter estimates (par_summary)
 #' @export
 #'
 #' @examples

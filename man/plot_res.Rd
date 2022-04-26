@@ -7,20 +7,20 @@
 plot_res(mod1, mod2 = NULL, add_truth = FALSE)
 }
 \arguments{
-\item{mod1}{The fitted model}
+\item{mod1}{The fitted model from \code{\link{run_mod}}}
 
-\item{mod2}{An optional second fitted model for comparison}
+\item{mod2}{An optional second fitted model from \code{\link{run_mod}} for comparison}
 
 \item{add_truth}{Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_dat}
 }
 \value{
-Plot
+p
 }
 \description{
 Plot of data plus model estimates (and credible intervals)
 }
 \examples{
 dat <- sim_slr(n_sim = 30)
-mod <- run_mod(dat,model = "slr")
+mod <- run_mod(dat, model = "slr")
 plot_res(mod)
 }

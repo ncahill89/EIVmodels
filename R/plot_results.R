@@ -1,12 +1,12 @@
 #' Plot of data plus model estimates (and credible intervals)
-#' @param mod1 The fitted model
-#' @param mod2 An optional second fitted model for comparison
+#' @param mod1 The fitted model from \code{\link{run_mod}}
+#' @param mod2 An optional second fitted model from \code{\link{run_mod}} for comparison
 #' @param add_truth Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_dat
-#' @return Plot
+#' @return p
 #' @export
 #' @examples
 #' dat <- sim_slr(n_sim = 30)
-#' mod <- run_mod(dat,model = "slr")
+#' mod <- run_mod(dat, model = "slr")
 #' plot_res(mod)
 plot_res <- function(mod1,
                      mod2 = NULL,

@@ -1,7 +1,7 @@
 #' Plot data with measurement uncertainty (in y and x variables)
 #'
 #' @param dat Input data with columns x,x_err,y,y_err
-#' @param add_truth Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_dat
+#' @param add_truth Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_slr, sim_cp or sim_gp.
 #'
 #' @return Plot of data with measurement errors
 #' @export
@@ -33,13 +33,7 @@ plot_dat <- function(dat,
   }
 }
 
-#' Format data for plotting
-#'
-#' @param raw_dat Input data with columns x,x_err,y,y_err
-#'
-#' @return Data formatted for plotting with measurement errors
-#' @export
-#'
+
 dat_to_plot <- function(raw_dat) {
 
   y <- y_err <- x <- x_err <- y_1_lwr <- x_4_upr <- bounds <- NULL

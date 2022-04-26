@@ -9,7 +9,7 @@ plot_dat(dat, add_truth = FALSE)
 \arguments{
 \item{dat}{Input data with columns x,x_err,y,y_err}
 
-\item{add_truth}{Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_dat}
+\item{add_truth}{Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_slr, sim_cp or sim_gp.}
 }
 \value{
 Plot of data with measurement errors
