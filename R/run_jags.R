@@ -4,6 +4,7 @@
 #' @param model The model to run. Choose from slr, cp, gp, igp
 #' @param EIV Indicate whether to use EIV framework. Defaults to TRUE
 #' @param n_cp Number of change points if model = "cp" is chosen. Can choose from 1,2,3,4.
+#' @param igp_smooth Informs prior for the smoothness (correlation) parameter if model = "igp" is chosen. Choose a value between 0 and 1. Closer to 1 will increase smoothness.
 #' @param iter MCMC iterations
 #' @param burnin MCMC burnin
 #' @param thin MCMC thinning
@@ -19,6 +20,7 @@ run_mod <- function(dat,
                     model = "slr",
                     EIV = TRUE,
                     n_cp = 1,
+                    igp_smooth = 0.2,
                     iter = 5000,
                     burnin = 1000,
                     thin = 4,
@@ -368,9 +370,9 @@ model{
   w.tilde.m<-K.gw%*%K.w.inv%*%w.m
 
   # Priors
-  sigma_g ~ dt(0,2^-2,1)T(0,4)
-  phi ~ dbeta(2,10)
-  sigma ~ dt(0,2^-2,1)T(0,4)
+  sigma_g ~ dt(0,2^-2,1)T(0,)
+  phi ~ dbeta(al,10)
+  sigma ~ dt(0,2^-2,1)T(0,)
   alpha ~ dnorm(0,2^-2)
   beta ~ dnorm(0,2^-2)
 
@@ -378,6 +380,7 @@ model{
 "
     igp_dat_list <- igp_data(dat)
   }
+
 
   ### The required data
   jags_data <- list(
@@ -391,7 +394,8 @@ model{
     x_pred = seq(min(dat$x), max(dat$x), length.out = 50),
     x_min = min(dat$x_st),
     x_max = max(dat$x_st),
-    n_cp = n_cp
+    n_cp = n_cp,
+    al = igp_smooth*10/(1-igp_smooth)
   )
 
 

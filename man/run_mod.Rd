@@ -9,6 +9,7 @@ run_mod(
   model = "slr",
   EIV = TRUE,
   n_cp = 1,
+  igp_smooth = 0.2,
   iter = 5000,
   burnin = 1000,
   thin = 4,
@@ -23,6 +24,8 @@ run_mod(
 \item{EIV}{Indicate whether to use EIV framework. Defaults to TRUE}
 
 \item{n_cp}{Number of change points if model = "cp" is chosen. Can choose from 1,2,3,4.}
+
+\item{igp_smooth}{Informs prior for the smoothness (correlation) parameter if model = "igp" is chosen. Choose a value between 0 and 1. Closer to 1 will increase smoothness.}
 
 \item{iter}{MCMC iterations}
 
