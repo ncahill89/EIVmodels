@@ -84,10 +84,9 @@ run_mod <- function(dat,
 "
   }
 
-  if (model == "cp" && EIV==FALSE) {
-
-    if(n_cp == 1){
-    run_model <- "
+  if (model == "cp" && EIV == FALSE) {
+    if (n_cp == 1) {
+      run_model <- "
 
 model{
 ####CP Regression model
@@ -121,7 +120,7 @@ model{
 }"
     }
 
-    if(n_cp == 2){
+    if (n_cp == 2) {
       run_model <- "
 
 model{
@@ -161,17 +160,73 @@ model{
 
 
 }"
-      myinitial <- function(){list("alpha"=c(rnorm(2,0,3)),
-                                   "beta"=c(rnorm(1,0,3),NA,rnorm(1,0,3)),
-                                   "cp.temp" = c(runif(2,min(dat$x_st),max(dat$x_st))))}
+      myinitial <- function() {
+        list(
+          "alpha" = c(rnorm(2, 0, 3)),
+          "beta" = c(rnorm(1, 0, 3), NA, rnorm(1, 0, 3)),
+          "cp.temp" = c(runif(2, min(dat$x_st), max(dat$x_st)))
+        )
+      }
     }
 
+    if (n_cp == 3) {
+      run_model <- "
+
+model{
+####CP Regression model
+
+  ###Data Loop
+    for(j in 1:n_obs)
+  {
+  y[j]~dnorm(mu_y[j],tau[j])
+  A[j] <- step(x[j]-cp[1])
+  B[j] <- step(x[j]-cp[2])
+  C[j] <- 1+step(x[j]-cp[3])
+  mu_y[j] <- alpha[B[j] + C[j]] + beta[A[j] + B[j] + C[j]]*(x[j]-cp[B[j] + C[j]])
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
   }
 
-  if (model == "cp" && EIV==TRUE) {
+  ##Priors
+  alpha[1] ~ dnorm(0.0,0.01)
+  alpha[2] ~ dnorm(0.0,0.01)
+  alpha[3] ~ dnorm(0.0,0.01)
 
-    if(n_cp == 1){
-    run_model <- "
+  beta[1]~dnorm(0.0,0.01)
+  beta[2] <- (alpha[2] - alpha[1])/(cp[2]-cp[1])
+  beta[3] <- (alpha[3] - alpha[2])/(cp[3]-cp[2])
+  beta[4]~dnorm(0.0,0.01)
+
+  sigma ~ dt(0,4^-2,1)T(0,)
+
+  cp.temp[1] ~ dunif(x_min,x_max)
+  cp.temp[2] ~ dunif(x_min,x_max)
+  cp.temp[3] ~ dunif(x_min,x_max)
+
+  cp[1:3]<-sort(cp.temp)
+
+  for(i in 1:n_pred)
+  {
+  Astar[i] <- step(x_pred_st[i]-cp[1])
+  Bstar[i] <- step(x_pred_st[i]-cp[2])
+  Cstar[i] <- 1+step(x_pred_st[i]-cp[3])
+  mu_pred[i] <- alpha[Bstar[j] + Cstar[i]] + beta[Astar[i] + Bstar[j] + Cstar[i]]*(x_pred_st[i]-cp[Bstar[j] + Cstar[i]])
+  }
+
+
+}"
+      myinitial <- function() {
+        list(
+          "alpha" = c(rnorm(3, 0, 3)),
+          "beta" = c(rnorm(1, 0, 3), NA, NA, rnorm(1, 0, 3)),
+          "cp.temp" = c(runif(3, min(dat$x_st), max(dat$x_st)))
+        )
+      }
+    }
+  }
+
+  if (model == "cp" && EIV == TRUE) {
+    if (n_cp == 1) {
+      run_model <- "
 
 model{
 ####CP Regression model
@@ -208,7 +263,7 @@ model{
 }"
     }
 
-    if(n_cp == 2){
+    if (n_cp == 2) {
       run_model <- "
 
 model{
@@ -255,13 +310,76 @@ model{
 
 }"
 
-      myinitial <- function(){list("alpha"=c(rnorm(2,0,3)),
-                                   "beta"=c(rnorm(1,0,3),NA,rnorm(1,0,3)),
-                                   "cp.temp" = c(runif(2,min(dat$x_st),max(dat$x_st))))}
+      myinitial <- function() {
+        list(
+          "alpha" = c(rnorm(2, 0, 3)),
+          "beta" = c(rnorm(1, 0, 3), NA, rnorm(1, 0, 3)),
+          "cp.temp" = c(runif(2, min(dat$x_st), max(dat$x_st)))
+        )
+      }
+    }
+
+    if (n_cp == 3) {
+      run_model <- "
+
+model{
+####CP Regression model
+
+  ###Data Loop
+    for(j in 1:n_obs)
+  {
+  y[j]~dnorm(mu_y[j],tau[j])
+  x[j] ~ dnorm(mu_x[j],x_err[j]^-2)
+
+  A[j] <- step(mu_x[j]-cp[1])
+  B[j] <- step(mu_x[j]-cp[2])
+  C[j] <- 1+step(mu_x[j]-cp[3])
+
+  mu_y[j] <- alpha[B[j] + C[j]] + beta[A[j] + B[j] + C[j]]*(mu_x[j]-cp[B[j] + C[j]])
+  mu_x[j] ~ dnorm(0,0.5^-2)
+
+  tau[j] <- (y_err[j]^2 + sigma^2)^-1
+  }
+
+  ##Priors
+  alpha[1] ~ dnorm(0.0,0.01)
+  alpha[2] ~ dnorm(0.0,0.01)
+  alpha[3] ~ dnorm(0.0,0.01)
+
+  beta[1]~dnorm(0.0,0.01)
+  beta[2] <- (alpha[2] - alpha[1])/(cp[2]-cp[1])
+  beta[3] <- (alpha[3] - alpha[2])/(cp[3]-cp[2])
+  beta[4]~dnorm(0.0,0.01)
+
+  sigma ~ dt(0,4^-2,1)T(0,)
+
+  cp.temp[1] ~ dunif(x_min,x_max)
+  cp.temp[2] ~ dunif(x_min,x_max)
+  cp.temp[3] ~ dunif(x_min,x_max)
+
+  cp[1:3]<-sort(cp.temp)
+
+  for(i in 1:n_pred)
+  {
+  Astar[i] <- step(x_pred_st[i]-cp[1])
+  Bstar[i] <- step(x_pred_st[i]-cp[2])
+  Cstar[i] <- 1+step(x_pred_st[i]-cp[3])
+  mu_pred[i] <- alpha[Bstar[i] + Cstar[i]] + beta[Astar[i] + Bstar[i] + Cstar[i]]*(x_pred_st[i]-cp[Bstar[i] + Cstar[i]])
+  }
+
+
+}"
+      myinitial <- function() {
+        list(
+          "alpha" = c(rnorm(3, 0, 3)),
+          "beta" = c(rnorm(1, 0, 3), NA, NA, rnorm(1, 0, 3)),
+          "cp.temp" = c(runif(3, min(dat$x_st), max(dat$x_st)))
+        )
+      }
     }
   }
 
-  if (model == "gp" && EIV==FALSE) {
+  if (model == "gp" && EIV == FALSE) {
     run_model <- "
 model{
 
@@ -293,7 +411,7 @@ model{
 "
   }
 
-  if (model == "gp" && EIV==TRUE) {
+  if (model == "gp" && EIV == TRUE) {
     run_model <- "
 model{
 
@@ -395,7 +513,7 @@ model{
     x_min = min(dat$x_st),
     x_max = max(dat$x_st),
     n_cp = n_cp,
-    al = igp_smooth*10/(1-igp_smooth)
+    al = igp_smooth * 10 / (1 - igp_smooth)
   )
 
 
@@ -458,8 +576,8 @@ model{
   m <- mod$BUGSoutput$sims.matrix
   sample_draws <- tidybayes::tidy_draws(m)
   par_summary <- posterior::summarise_draws(sample_draws)
-  if(sum(par_summary$rhat >1.1, na.rm = TRUE) == 0) message("No convergence issues detected")
-  if(sum(par_summary$rhat >1.1, na.rm = TRUE) > 0) message("Convergence issues detected")
+  if (sum(par_summary$rhat > 1.1, na.rm = TRUE) == 0) message("No convergence issues detected")
+  if (sum(par_summary$rhat > 1.1, na.rm = TRUE) > 0) message("Convergence issues detected")
 
 
   return(list(
@@ -486,18 +604,16 @@ model{
 #' par_est(mod)
 #'
 par_est <- function(mod) {
-
-
   mu_pred <- .lower <- .upper <- x <- pred_y <- lwr_95 <- upr_95 <- alpha <- cp <- sigma_g <- phi <- sigma <- mu_x <- dat <- NULL
 
   sample_draws <- mod$sample_draws
   n_iter <- sample_draws$.iteration %>%
     unique() %>%
     length()
-  if(n_iter >1000) {
+  if (n_iter > 1000) {
     sample_draws <- sample_draws %>% dplyr::slice_sample(n = 1000)
     n_iter <- 1000
-    }
+  }
   jags_data <- mod$jags_data
 
   if (mod$model == "slr") {
@@ -518,7 +634,7 @@ par_est <- function(mod) {
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
 
-    par_summary <- posterior::summarise_draws(sample_draws) %>% dplyr::filter(variable %in% c("alpha", "beta", "sigma"))
+    par_summary <- posterior::summarise_draws(sample_draws, ~quantile(.x,probs = c(0.025,0.975))) %>% dplyr::filter(variable %in% c("alpha", "beta", "sigma"))
   }
 
   if (mod$model == "cp") {
@@ -540,18 +656,20 @@ par_est <- function(mod) {
       ) %>%
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
-    if(jags_data$n_cp == 1)
-    {
-    par_summary <- posterior::summarise_draws(sample_draws) %>%
-      dplyr::filter(variable %in% c("alpha", "beta[1]", "beta[2]", "cp", "sigma"))
-    }
-
-    if(jags_data$n_cp == 2)
-    {
+    if (jags_data$n_cp == 1) {
       par_summary <- posterior::summarise_draws(sample_draws) %>%
-        dplyr::filter(variable %in% c("alpha[1]","alpha[2]", "beta[1]", "beta[2]","beta[3]", "cp[1]","cp[2]", "sigma"))
+        dplyr::filter(variable %in% c("alpha", "beta[1]", "beta[2]", "cp", "sigma"))
     }
 
+    if (jags_data$n_cp == 2) {
+      par_summary <- posterior::summarise_draws(sample_draws) %>%
+        dplyr::filter(variable %in% c("alpha[1]", "alpha[2]", "beta[1]", "beta[2]", "beta[3]", "cp[1]", "cp[2]", "sigma"))
+    }
+
+    if (jags_data$n_cp == 3) {
+      par_summary <- posterior::summarise_draws(sample_draws) %>%
+        dplyr::filter(variable %in% c("alpha[1]", "alpha[2]", "alpha[3]", "beta[1]", "beta[2]", "beta[3]", "beta[4]", "cp[1]", "cp[2]", "cp[3]", "sigma"))
+    }
   }
 
   if (mod$model == "gp") {
@@ -562,11 +680,21 @@ par_est <- function(mod) {
     par_est <- posterior::summarise_draws(sample_draws)
 
     # posterior estimate for pars
-    sigma <- par_est %>% dplyr::filter(variable == "sigma") %>% dplyr::pull(median)
-    alpha <- par_est %>% dplyr::filter(variable == "alpha") %>% dplyr::pull(median)
-    phi <- par_est %>% dplyr::filter(variable == "phi") %>% dplyr::pull(median)
-    sigma_g <- par_est %>% dplyr::filter(variable == "sigma_g") %>% dplyr::pull(median)
-    mu_x <- par_est %>% dplyr::filter(!variable %in% c("sigma","alpha","phi","sigma_g","deviance")) %>% dplyr::pull(median)
+    sigma <- par_est %>%
+      dplyr::filter(variable == "sigma") %>%
+      dplyr::pull(median)
+    alpha <- par_est %>%
+      dplyr::filter(variable == "alpha") %>%
+      dplyr::pull(median)
+    phi <- par_est %>%
+      dplyr::filter(variable == "phi") %>%
+      dplyr::pull(median)
+    sigma_g <- par_est %>%
+      dplyr::filter(variable == "sigma_g") %>%
+      dplyr::pull(median)
+    mu_x <- par_est %>%
+      dplyr::filter(!variable %in% c("sigma", "alpha", "phi", "sigma_g", "deviance")) %>%
+      dplyr::pull(median)
 
     ### Predicitive distribution for the GP
     Sigma <- sigma * 2 * diag(n_obs) + sigma_g^2 * exp(-(phi^2) * fields::rdist(mu_x, mu_x)^2)
@@ -577,18 +705,18 @@ par_est <- function(mod) {
     pred_mean <- Sigma_star %*% solve(Sigma, mod$dat$y)
     pred_var <- Sigma_star_star - Sigma_star %*% solve(Sigma, t(Sigma_star))
 
-    temp <- mvtnorm::rmvnorm(1000,pred_mean,pred_var)
-    deriv <- matrix(NA, nrow = 500, ncol = length(jags_data$x_pred_st))
+    temp <- mvtnorm::rmvnorm(n_iter, pred_mean, pred_var)
+    deriv <- matrix(NA, nrow = n_iter / 2, ncol = length(jags_data$x_pred_st))
     newD <- jags_data$x_pred_st
 
-    for(i in 1:500)
+    for (i in 1:(n_iter / 2))
     {
-      dat <- tibble::tibble(x = mod$jags_data$x_pred_st, y = temp[i,])
+      dat <- tibble::tibble(x = mod$jags_data$x_pred_st, y = temp[i, ])
       gam_mod <- mgcv::gamm(y ~ s(x, k = 30), data = dat)
       gam_mod <- gam_mod$gam
-      X0 <- mgcv::predict.gam(gam_mod, data.frame(x=newD), type = "lpmatrix")
+      X0 <- mgcv::predict.gam(gam_mod, data.frame(x = newD), type = "lpmatrix")
       newD <- newD + 1e-7
-      X1 <- mgcv::predict.gam(gam_mod, data.frame(x=newD), type = "lpmatrix")
+      X1 <- mgcv::predict.gam(gam_mod, data.frame(x = newD), type = "lpmatrix")
       Xp <- (X1 - X0) / 1e-7
       Xp.r <- NROW(Xp)
       Xp.c <- NCOL(Xp)
@@ -597,7 +725,7 @@ par_est <- function(mod) {
       want <- grep("x", colnames(X1))
       Xi[, want] <- Xp[, want]
       df <- Xi %*% coef(gam_mod)
-      deriv[i,] = c(df)
+      deriv[i, ] <- c(df)
     }
 
     ### Store results
@@ -606,14 +734,13 @@ par_est <- function(mod) {
       pred_y = c(pred_mean),
       lwr_95 = pred_y - 1.96 * sqrt(diag(pred_var)),
       upr_95 = pred_y + 1.96 * sqrt(diag(pred_var)),
-      rate_y = apply(deriv,2,median),
-      rate_lwr_95 = apply(deriv,2,quantile, probs = 0.025),
-      rate_upr_95 = apply(deriv,2,quantile, probs = 0.975)
+      rate_y = apply(deriv, 2, median),
+      rate_lwr_95 = apply(deriv, 2, quantile, probs = 0.025),
+      rate_upr_95 = apply(deriv, 2, quantile, probs = 0.975)
     )
 
     par_summary <- posterior::summarise_draws(sample_draws) %>%
       dplyr::filter(variable %in% c("alpha", "phi", "sigma_g", "sigma"))
-
   }
 
   if (mod$model == "igp") {
