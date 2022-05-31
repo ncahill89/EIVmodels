@@ -191,7 +191,7 @@ model{
   alpha[2] ~ dnorm(0.0,0.01)
   alpha[3] ~ dnorm(0.0,0.01)
 
-  beta[1]~dnorm(0.0,0.01)
+  beta[1] ~ dnorm(0.0,0.01)
   beta[2] <- (alpha[2] - alpha[1])/(cp[2]-cp[1])
   beta[3] <- (alpha[3] - alpha[2])/(cp[3]-cp[2])
   beta[4]~dnorm(0.0,0.01)
@@ -202,7 +202,7 @@ model{
   cp.temp[2] ~ dunif(x_min,x_max)
   cp.temp[3] ~ dunif(x_min,x_max)
 
-  cp[1:3]<-sort(cp.temp)
+  cp[1:3] <- sort(cp.temp)
 
   for(i in 1:n_pred)
   {
