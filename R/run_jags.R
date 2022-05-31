@@ -209,7 +209,7 @@ model{
   Astar[i] <- step(x_pred_st[i]-cp[1])
   Bstar[i] <- step(x_pred_st[i]-cp[2])
   Cstar[i] <- 1+step(x_pred_st[i]-cp[3])
-  mu_pred[i] <- alpha[Bstar[i] + Cstar[i]] + beta[Astar[i] + Bstar[i] + Cstar[i]]*(x_pred_st[i]-cp[Bstar[j] + Cstar[i]])
+  mu_pred[i] <- alpha[Bstar[i] + Cstar[i]] + beta[Astar[i] + Bstar[i] + Cstar[i]]*(x_pred_st[i]-cp[Bstar[i] + Cstar[i]])
   }
 
 
