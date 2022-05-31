@@ -178,7 +178,7 @@ model{
   ###Data Loop
     for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],tau[j])
+  y[j] ~ dnorm(mu_y[j],tau[j])
   A[j] <- step(x[j]-cp[1])
   B[j] <- step(x[j]-cp[2])
   C[j] <- 1+step(x[j]-cp[3])
@@ -209,7 +209,7 @@ model{
   Astar[i] <- step(x_pred_st[i]-cp[1])
   Bstar[i] <- step(x_pred_st[i]-cp[2])
   Cstar[i] <- 1+step(x_pred_st[i]-cp[3])
-  mu_pred[i] <- alpha[Bstar[j] + Cstar[i]] + beta[Astar[i] + Bstar[j] + Cstar[i]]*(x_pred_st[i]-cp[Bstar[j] + Cstar[i]])
+  mu_pred[i] <- alpha[Bstar[i] + Cstar[i]] + beta[Astar[i] + Bstar[i] + Cstar[i]]*(x_pred_st[i]-cp[Bstar[j] + Cstar[i]])
   }
 
 
@@ -272,7 +272,7 @@ model{
   ###Data Loop
     for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],tau[j])
+  y[j] ~ dnorm(mu_y[j],tau[j])
   x[j] ~ dnorm(mu_x[j],x_err[j]^-2)
   A[j] <- step(mu_x[j]-cp[1])
   C[j] <- 1+step(mu_x[j]-cp[2])
@@ -328,7 +328,7 @@ model{
   ###Data Loop
     for(j in 1:n_obs)
   {
-  y[j]~dnorm(mu_y[j],tau[j])
+  y[j] ~ dnorm(mu_y[j],tau[j])
   x[j] ~ dnorm(mu_x[j],x_err[j]^-2)
 
   A[j] <- step(mu_x[j]-cp[1])
