@@ -20,12 +20,14 @@ plot_res <- function(mod1,
   res <- par_est(mod1)
   pred_res <- res$pred_summary
   pred_res$model_label <- ifelse(mod1$EIV,paste0("eiv-",mod1$model),mod1$model)
+  BP_scale <- mod1$BP_scale
 
   ### same set up if second model is included
   if (!is.null(mod2)) {
     pred_res1 <- pred_res
     res2 <- par_est(mod2)
     pred_res2 <- res2$pred_summary
+    BP_scale <- mod2$BP_scale
     pred_res1$model_label <- ifelse(mod1$EIV, paste0("eiv-",mod1$model),mod1$model)
     pred_res2$model_label <- ifelse(mod2$EIV, paste0("eiv-",mod2$model),mod2$model)
     pred_res <- dplyr::full_join(pred_res1, pred_res2)
@@ -40,6 +42,9 @@ plot_res <- function(mod1,
     ggplot2::xlab("X") +
     ggplot2::labs(colour = "", fill = "95% UI") +
     ggplot2::theme_classic()
+
+  if(BP_scale) p <- p + scale_x_reverse()
+
   if(ncol(pred_res) == 8)
   {
   p_rate <- ggplot2::ggplot(pred_res %>% tidyr::drop_na(), ggplot2::aes(x = x, y = rate_y)) +
@@ -49,6 +54,8 @@ plot_res <- function(mod1,
       ggplot2::xlab("X") +
       ggplot2::labs(colour = "", fill = "95% UI") +
       ggplot2::theme_classic()
+
+  if(BP_scale) p_rate <- p_rate + scale_x_reverse()
 
   }
   ### add true line if indicated

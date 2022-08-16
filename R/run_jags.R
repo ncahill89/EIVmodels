@@ -19,6 +19,7 @@
 run_mod <- function(dat,
                     model = "slr",
                     EIV = TRUE,
+                    BP_scale = FALSE,
                     n_cp = 1,
                     igp_smooth = 0.2,
                     iter = 5000,
@@ -586,7 +587,8 @@ model{
     EIV = EIV,
     dat = dat,
     jags_data = jags_data,
-    scale_factor = scale_factor
+    scale_factor = scale_factor,
+    BP_scale = BP_scale
   ))
 }
 
@@ -729,6 +731,7 @@ par_est <- function(mod) {
     }
 
     ### Store results
+    if(mod$BP_scale) deriv <- -1*deriv
     pred_summary <- tibble::tibble(
       x = x_star * mod$scale_factor,
       pred_y = c(pred_mean),
@@ -788,6 +791,8 @@ par_est <- function(mod) {
       K.w.inv[i, , ] <- solve(K[i, , ])
       pred[i, ] <- sample_draws$alpha[i] + K.gw[i, , ] %*% K.w.inv[i, , ] %*% w.ms[i, ]
     } # End i loop
+
+    if(mod$BP_scale) w.ms <- -1*w.ms
 
     ### Store results
     pred_summary <- tibble::tibble(

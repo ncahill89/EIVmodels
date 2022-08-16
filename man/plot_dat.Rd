@@ -4,7 +4,7 @@
 \alias{plot_dat}
 \title{Plot data with measurement uncertainty (in y and x variables)}
 \usage{
-plot_dat(dat, add_truth = FALSE)
+plot_dat(dat, BP_scale = FALSE, add_truth = FALSE)
 }
 \arguments{
 \item{dat}{Input data with columns x,x_err,y,y_err}

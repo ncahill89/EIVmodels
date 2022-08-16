@@ -10,6 +10,7 @@
 #' dat <- sim_slr(n_sim = 30)
 #' plot_dat(dat)
 plot_dat <- function(dat,
+                     BP_scale = FALSE,
                      add_truth = FALSE) {
 
   x <- y <- obs_index <- true_x <- true_y <- NULL
@@ -22,6 +23,8 @@ plot_dat <- function(dat,
     ggplot2::scale_fill_manual(values = "gray", name = "") +
     ggplot2::theme_classic()
 
+
+  if(BP_scale) p <- p + scale_x_reverse()
 
   if (add_truth) {
     return(p + ggplot2::geom_line(data = dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +

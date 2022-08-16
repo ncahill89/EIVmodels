@@ -8,6 +8,7 @@ run_mod(
   dat,
   model = "slr",
   EIV = TRUE,
+  BP_scale = FALSE,
   n_cp = 1,
   igp_smooth = 0.2,
   iter = 5000,
