@@ -71,7 +71,8 @@
 <span>  iter <span class="op">=</span> <span class="fl">5000</span>,</span>
 <span>  burnin <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  thin <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  scale_factor <span class="op">=</span> <span class="fl">1</span></span>
+<span>  scale_factor_x <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  scale_factor_y <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -109,8 +110,12 @@
 <dd><p>MCMC thinning</p></dd>
 
 
-<dt>scale_factor</dt>
-<dd><p>value to divide the predictor (x) by to change the scale. 1 will result in n0 change. 1000 is recommended if x is years.</p></dd>
+<dt>scale_factor_x</dt>
+<dd><p>value to divide the predictor (x) by to change the scale. 1 will result in no change. 1000 is recommended if x is years.</p></dd>
+
+
+<dt>scale_factor_y</dt>
+<dd><p>value to divide the response (y) by to change the scale. 1 will result in no change.</p></dd>
 
 </dl></div>
     <div class="section level2">
