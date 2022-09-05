@@ -14,7 +14,8 @@ run_mod(
   iter = 5000,
   burnin = 1000,
   thin = 4,
-  scale_factor = 1
+  scale_factor_x = 1,
+  scale_factor_y = 1
 )
 }
 \arguments{
@@ -34,7 +35,9 @@ run_mod(
 
 \item{thin}{MCMC thinning}
 
-\item{scale_factor}{value to divide the predictor (x) by to change the scale. 1 will result in n0 change. 1000 is recommended if x is years.}
+\item{scale_factor_x}{value to divide the predictor (x) by to change the scale. 1 will result in no change. 1000 is recommended if x is years.}
+
+\item{scale_factor_y}{value to divide the response (y) by to change the scale. 1 will result in no change.}
 }
 \value{
 List with data, JAGS input data, model output and the name of the model file.

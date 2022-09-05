@@ -8,7 +8,8 @@
 #' @param iter MCMC iterations
 #' @param burnin MCMC burnin
 #' @param thin MCMC thinning
-#' @param scale_factor value to divide the predictor (x) by to change the scale. 1 will result in n0 change. 1000 is recommended if x is years.
+#' @param scale_factor_x value to divide the predictor (x) by to change the scale. 1 will result in no change. 1000 is recommended if x is years.
+#' @param scale_factor_y value to divide the response (y) by to change the scale. 1 will result in no change.
 #'
 #' @return List with data, JAGS input data, model output and the name of the model file.
 #' @export
@@ -25,14 +26,17 @@ run_mod <- function(dat,
                     iter = 5000,
                     burnin = 1000,
                     thin = 4,
-                    scale_factor = 1) {
+                    scale_factor_x = 1,
+                    scale_factor_y = 1) {
 
   # Simple Linear Regression Model ------------------------------------------
   x <- x_err <- NULL
 
   dat <- dat %>% dplyr::mutate(
-    x_st = x / scale_factor,
-    x_err_st = x_err / scale_factor
+    x_st = x / scale_factor_x,
+    x_err_st = x_err / scale_factor_x,
+    y_st = y/scale_factor_y,
+    y_err_st = y_err/scale_factor_y
   )
 
   myinitial <- NULL
@@ -503,8 +507,8 @@ model{
 
   ### The required data
   jags_data <- list(
-    y = dat$y,
-    y_err = dat$y_err,
+    y = dat$y_st,
+    y_err = dat$y_err_st,
     x = dat$x_st,
     x_err = dat$x_err_st,
     n_obs = nrow(dat),
@@ -587,7 +591,8 @@ model{
     EIV = EIV,
     dat = dat,
     jags_data = jags_data,
-    scale_factor = scale_factor,
+    scale_factor_x = scale_factor_x,
+    scale_factor_y = scale_factor_y,
     BP_scale = BP_scale
   ))
 }
@@ -624,6 +629,7 @@ par_est <- function(mod) {
         names_to = "n",
         values_to = "mu_pred"
       ) %>%
+      dplyr::mutate(mu_pred = mu_pred*mod$scale_factor_y) %>%
       dplyr::mutate(n = rep(1:50, n_iter)) %>%
       dplyr::group_by(n) %>%
       tidybayes::median_qi(mu_pred) %>%
@@ -647,6 +653,7 @@ par_est <- function(mod) {
         names_to = "n",
         values_to = "mu_pred"
       ) %>%
+      dplyr::mutate(mu_pred = mu_pred*mod$scale_factor_y) %>%
       dplyr::mutate(n = rep(1:50, n_iter)) %>%
       dplyr::group_by(n) %>%
       tidybayes::median_qi(mu_pred) %>%
@@ -731,12 +738,13 @@ par_est <- function(mod) {
     }
 
     ### Store results
+    deriv <- deriv*mod$scale_factor_y
     if(mod$BP_scale) deriv <- -1*deriv
     pred_summary <- tibble::tibble(
       x = x_star * mod$scale_factor,
-      pred_y = c(pred_mean),
-      lwr_95 = pred_y - 1.96 * sqrt(diag(pred_var)),
-      upr_95 = pred_y + 1.96 * sqrt(diag(pred_var)),
+      pred_y = c(pred_mean*mod$scale_factor_y),
+      lwr_95 = (pred_y - 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
+      upr_95 = (pred_y + 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
       rate_y = apply(deriv, 2, median),
       rate_lwr_95 = apply(deriv, 2, quantile, probs = 0.025),
       rate_upr_95 = apply(deriv, 2, quantile, probs = 0.975)
@@ -778,7 +786,6 @@ par_est <- function(mod) {
 
     # Get posterior samples of rates
     w.ms <- as.matrix(sample_draws %>% dplyr::select(`w.m[1]`:`w.m[50]`))
-
     # Get estimates
     for (i in 1:n_iter) {
       for (k in 1:Ngrid) {
@@ -791,6 +798,8 @@ par_est <- function(mod) {
       K.w.inv[i, , ] <- solve(K[i, , ])
       pred[i, ] <- sample_draws$alpha[i] + K.gw[i, , ] %*% K.w.inv[i, , ] %*% w.ms[i, ]
     } # End i loop
+    pred <- pred*mod$scale_factor_y
+    w.ms <- w.ms*mod$scale_factor_y
 
     if(mod$BP_scale) w.ms <- -1*w.ms
 
