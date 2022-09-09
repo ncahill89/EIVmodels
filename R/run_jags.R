@@ -611,6 +611,7 @@ model{
 #' par_est(mod)
 #'
 par_est <- function(mod) {
+
   mu_pred <- .lower <- .upper <- x <- pred_y <- lwr_95 <- upr_95 <- alpha <- cp <- sigma_g <- phi <- sigma <- mu_x <- dat <- NULL
 
   sample_draws <- mod$sample_draws
@@ -741,7 +742,7 @@ par_est <- function(mod) {
     deriv <- deriv*mod$scale_factor_y
     if(mod$BP_scale) deriv <- -1*deriv
     pred_summary <- tibble::tibble(
-      x = x_star * mod$scale_factor,
+      x = x_star * mod$scale_factor_x,
       pred_y = c(pred_mean*mod$scale_factor_y),
       lwr_95 = (pred_y - 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
       upr_95 = (pred_y + 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
