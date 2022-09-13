@@ -643,7 +643,7 @@ par_est <- function(mod) {
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
 
-    par_summary <- posterior::summarise_draws(sample_draws, ~quantile(.x,probs = c(0.025,0.975))) %>% dplyr::filter(variable %in% c("alpha", "beta", "sigma"))
+    par_summary <- posterior::summarise_draws(sample_draws) %>% dplyr::filter(variable %in% c("alpha", "beta", "sigma"))
   }
 
   if (mod$model == "cp") {
