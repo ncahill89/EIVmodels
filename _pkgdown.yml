@@ -20,9 +20,9 @@ navbar:
       text: Vignettes
       menu:
       - text: Basics
-        href: articles/eivmodels.html
+        href: docs/articles/eivmodels.html
       - text: Change Point Regression
-        href: articles/CPTutorial.html
+        href: docs/articles/CPTutorial.html
     tutorials:
       text: Tutorials
       menu:
