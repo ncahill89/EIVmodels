@@ -741,9 +741,10 @@ par_est <- function(mod) {
     ### Store results
     deriv <- deriv*mod$scale_factor_y
     if(mod$BP_scale) deriv <- -1*deriv
+    pred_y = c(pred_mean*mod$scale_factor_y)
     pred_summary <- tibble::tibble(
       x = x_star * mod$scale_factor_x,
-      pred_y = c(pred_mean*mod$scale_factor_y),
+      pred_y = pred_y,
       lwr_95 = (pred_y - 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
       upr_95 = (pred_y + 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
       rate_y = apply(deriv, 2, median),
