@@ -5,4 +5,10 @@ navbar:
 structure:
 left:
   - home
-  - slides: Slides
+  - slides
+components:
+  slides:
+  text: Slides
+menu:
+  text: Introduction to Bayesian EIV Models
+  href: https://rpubs.com/ncahill_stat/892967
