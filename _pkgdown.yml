@@ -2,9 +2,10 @@ url: https://ncahill89.github.io/EIVmodels/
 template:
   bootstrap: 5
 navbar:
- components:
-  articles:
-   text: Vignettes
-   menu:
-   - text: Basics
-     href: articles/eivmodels.html
+  components:
+    articles:
+      text: Vignettes
+      menu:
+      - text: Basics
+        href: articles/eivmodels.html
+
