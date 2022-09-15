@@ -6,6 +6,8 @@ navbar:
     articles:
       text: Vignettes
       menu:
+      - text: Basics
+        href: https://github.com/ncahill89/vignettes/blob/master/eivmodels.md
       - text: Change Point Regression
         href: https://github.com/ncahill89/vignettes/blob/master/CPTutorial.md
 
