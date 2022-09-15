@@ -7,5 +7,5 @@ navbar:
       text: Vignettes
       menu:
       - text: Basics
-        href: articles/CPTutorial.html
+        href: reference/CPTutorial.html
 
