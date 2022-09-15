@@ -7,5 +7,5 @@ navbar:
       text: Vignettes
       menu:
       - text: Basics
-        href: articles/eivmodels.html
+        href: articles/CPTutorial.html
 
