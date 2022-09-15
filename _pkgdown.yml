@@ -4,7 +4,7 @@ template:
 navbar:
  components:
   articles:
-    text: Slides
-  menu:
-  -text: Introduction to Bayesian EIV Models
-  -href: https://rpubs.com/ncahill_stat/892967
+   text: Slides
+   menu:
+   - text: Introduction to Bayesian EIV Models
+     href: https://rpubs.com/ncahill_stat/892967
