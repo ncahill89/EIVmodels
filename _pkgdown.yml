@@ -7,5 +7,5 @@ navbar:
       text: Vignettes
       menu:
       - text: Basics
-        href: reference/CPTutorial.html
+        href: https://github.com/ncahill89/vignettes/blob/master/CPTutorial.md
 
