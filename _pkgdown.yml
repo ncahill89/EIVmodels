@@ -3,9 +3,7 @@ template:
     bootstrap: 5
 navbar:
  structure:
-  left:
-    - home
-    - slides
+  left: [home, slides]
  components:
   slides:
     text: Slides
