@@ -6,6 +6,9 @@ navbar:
     articles:
       text: Vignettes
       menu:
-      - text: Basics
+      - text: Change Point Regression
         href: https://github.com/ncahill89/vignettes/blob/master/CPTutorial.md
 
+    reference:
+      text: Documentation
+      href: reference/index.html
