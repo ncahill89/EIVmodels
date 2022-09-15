@@ -4,9 +4,9 @@ template:
 navbar:
   structure:
   left:
-- home
-- articles
-- slides
-- tutorials
-- reference
-- news
+  - home
+  - articles
+  - slides
+  - tutorials
+  - reference
+  - news
