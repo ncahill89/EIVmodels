@@ -1,8 +1,8 @@
 url: https://ncahill89.github.io/EIVmodels/
 template:
-  bootstrap: 5
+    bootstrap: 5
 navbar:
-  structure:
-  left:
-    - home
+structure:
+left:
+  - home
 
