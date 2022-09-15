@@ -2,13 +2,13 @@ url: https://ncahill89.github.io/EIVmodels/
 template:
     bootstrap: 5
 navbar:
-structure:
-left:
-  - home
-  - slides
-components:
+  structure:
+  left:
+    - home
+    - slides
+  components:
   slides:
   text: Slides
-menu:
+  menu:
   text: Introduction to Bayesian EIV Models
   href: https://rpubs.com/ncahill_stat/892967
