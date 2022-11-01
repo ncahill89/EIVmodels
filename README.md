@@ -8,7 +8,7 @@ In statistics, errors-in-variables (EIV) models, or measurement error models, ar
 
 ## Getting started
 
-See [Vignettes](https://github.com/ncahill89/vignettes/blob/master/CPTutorial.md).
+See [Vignettes](https://github.com/ncahill89/vignettes/blob/master/eivmodels.md).
 
 ## Installation
 

@@ -642,8 +642,12 @@ par_est <- function(mod) {
       ) %>%
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
-
-    par_summary <- posterior::summarise_draws(sample_draws) %>% dplyr::filter(variable %in% c("alpha", "beta", "sigma"))
+    par_summary <- posterior::summarise_draws(sample_draws) %>% dplyr::filter(variable %in% c("alpha", "beta")) %>% mutate(mean = mean*mod$scale_factor_y,
+                                                                                                                           median = median*mod$scale_factor_y,
+                                                                                                                           sd = sd*mod$scale_factor_y,
+                                                                                                                           mad = mad*mod$scale_factor_y,
+                                                                                                                           q5 = q5*mod$scale_factor_y,
+                                                                                                                           q95 = q95*mod$scale_factor_y)
   }
 
   if (mod$model == "cp") {
@@ -712,10 +716,11 @@ par_est <- function(mod) {
     Sigma_star_star <- sigma_g^2 * exp(-(phi^2) * fields::rdist(x_star, x_star)^2)
 
 
-    pred_mean <- Sigma_star %*% solve(Sigma, mod$dat$y)
+    pred_mean <- Sigma_star %*% solve(Sigma, mod$dat$y_st)
     pred_var <- Sigma_star_star - Sigma_star %*% solve(Sigma, t(Sigma_star))
 
     temp <- mvtnorm::rmvnorm(n_iter, pred_mean, pred_var)
+    temp <- temp*mod$scale_factor_y
     deriv <- matrix(NA, nrow = n_iter / 2, ncol = length(jags_data$x_pred_st))
     newD <- jags_data$x_pred_st
 
@@ -737,16 +742,16 @@ par_est <- function(mod) {
       df <- Xi %*% coef(gam_mod)
       deriv[i, ] <- c(df)
     }
+    deriv <- (deriv*mod$scale_factor_y)/mod$scale_factor_x
 
     ### Store results
-    deriv <- deriv*mod$scale_factor_y
     if(mod$BP_scale) deriv <- -1*deriv
     pred_y = c(pred_mean*mod$scale_factor_y)
     pred_summary <- tibble::tibble(
       x = x_star * mod$scale_factor_x,
       pred_y = pred_y,
-      lwr_95 = (pred_y - 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
-      upr_95 = (pred_y + 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
+      lwr_95 = (pred_mean - 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
+      upr_95 = (pred_mean + 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
       rate_y = apply(deriv, 2, median),
       rate_lwr_95 = apply(deriv, 2, quantile, probs = 0.025),
       rate_upr_95 = apply(deriv, 2, quantile, probs = 0.975)
@@ -801,7 +806,7 @@ par_est <- function(mod) {
       pred[i, ] <- sample_draws$alpha[i] + K.gw[i, , ] %*% K.w.inv[i, , ] %*% w.ms[i, ]
     } # End i loop
     pred <- pred*mod$scale_factor_y
-    w.ms <- w.ms*mod$scale_factor_y
+    w.ms <- (w.ms*mod$scale_factor_y)/mod$scale_factor_x
 
     if(mod$BP_scale) w.ms <- -1*w.ms
 
