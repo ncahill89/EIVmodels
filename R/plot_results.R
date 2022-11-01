@@ -43,7 +43,7 @@ plot_res <- function(mod1,
     ggplot2::labs(colour = "", fill = "95% UI") +
     ggplot2::theme_classic()
 
-  if(BP_scale) p <- p + scale_x_reverse()
+  if(BP_scale) p <- p + ggplot2::scale_x_reverse()
 
   if(ncol(pred_res) == 8)
   {
@@ -55,7 +55,7 @@ plot_res <- function(mod1,
       ggplot2::labs(colour = "", fill = "95% UI") +
       ggplot2::theme_classic()
 
-  if(BP_scale) p_rate <- p_rate + scale_x_reverse()
+  if(BP_scale) p_rate <- p_rate + ggplot2::scale_x_reverse()
 
   }
   ### add true line if indicated

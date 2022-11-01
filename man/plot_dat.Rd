@@ -9,6 +9,8 @@ plot_dat(dat, BP_scale = FALSE, add_truth = FALSE)
 \arguments{
 \item{dat}{Input data with columns x,x_err,y,y_err}
 
+\item{BP_scale}{Present the data as Before Present (BP). Defaults to FALSE.}
+
 \item{add_truth}{Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_slr, sim_cp or sim_gp.}
 }
 \value{

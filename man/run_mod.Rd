@@ -23,7 +23,9 @@ run_mod(
 
 \item{model}{The model to run. Choose from slr, cp, gp, igp}
 
-\item{EIV}{Indicate whether to use EIV framework. Defaults to TRUE}
+\item{EIV}{Use EIV framework. Defaults to TRUE}
+
+\item{BP_scale}{Present the data as Before Present (BP). Defaults to FALSE.}
 
 \item{n_cp}{Number of change points if model = "cp" is chosen. Can choose from 1,2,3,4.}
 

@@ -2,7 +2,8 @@
 #'
 #' @param dat Input data with columns x,x_err,y,y_err
 #' @param model The model to run. Choose from slr, cp, gp, igp
-#' @param EIV Indicate whether to use EIV framework. Defaults to TRUE
+#' @param EIV Use EIV framework. Defaults to TRUE
+#' @param BP_scale Present the data as Before Present (BP). Defaults to FALSE.
 #' @param n_cp Number of change points if model = "cp" is chosen. Can choose from 1,2,3,4.
 #' @param igp_smooth Informs prior for the smoothness (correlation) parameter if model = "igp" is chosen. Choose a value between 0 and 1. Closer to 1 will increase smoothness.
 #' @param iter MCMC iterations
@@ -30,13 +31,13 @@ run_mod <- function(dat,
                     scale_factor_y = 1) {
 
   # Simple Linear Regression Model ------------------------------------------
-  x <- x_err <- NULL
+  x <- x_err <- y <- y_err <- NULL
 
   dat <- dat %>% dplyr::mutate(
     x_st = x / scale_factor_x,
     x_err_st = x_err / scale_factor_x,
-    y_st = y/scale_factor_y,
-    y_err_st = y_err/scale_factor_y
+    y_st = y / scale_factor_y,
+    y_err_st = y_err / scale_factor_y
   )
 
   myinitial <- NULL
@@ -167,9 +168,9 @@ model{
 }"
       myinitial <- function() {
         list(
-          "alpha" = c(rnorm(2, 0, 3)),
-          "beta" = c(rnorm(1, 0, 3), NA, rnorm(1, 0, 3)),
-          "cp.temp" = c(runif(2, min(dat$x_st), max(dat$x_st)))
+          "alpha" = c(stats::rnorm(2, 0, 3)),
+          "beta" = c(stats::rnorm(1, 0, 3), NA, stats::rnorm(1, 0, 3)),
+          "cp.temp" = c(stats::runif(2, min(dat$x_st), max(dat$x_st)))
         )
       }
     }
@@ -221,9 +222,9 @@ model{
 }"
       myinitial <- function() {
         list(
-          "alpha" = c(rnorm(3, 0, 3)),
-          "beta" = c(rnorm(1, 0, 3), NA, NA, rnorm(1, 0, 3)),
-          "cp.temp" = c(runif(3, min(dat$x_st), max(dat$x_st)))
+          "alpha" = c(stats::rnorm(3, 0, 3)),
+          "beta" = c(stats::rnorm(1, 0, 3), NA, NA, stats::rnorm(1, 0, 3)),
+          "cp.temp" = c(stats::runif(3, min(dat$x_st), max(dat$x_st)))
         )
       }
     }
@@ -317,9 +318,9 @@ model{
 
       myinitial <- function() {
         list(
-          "alpha" = c(rnorm(2, 0, 3)),
-          "beta" = c(rnorm(1, 0, 3), NA, rnorm(1, 0, 3)),
-          "cp.temp" = c(runif(2, min(dat$x_st), max(dat$x_st)))
+          "alpha" = c(stats::rnorm(2, 0, 3)),
+          "beta" = c(stats::rnorm(1, 0, 3), NA, stats::rnorm(1, 0, 3)),
+          "cp.temp" = c(stats::runif(2, min(dat$x_st), max(dat$x_st)))
         )
       }
     }
@@ -376,9 +377,9 @@ model{
 }"
       myinitial <- function() {
         list(
-          "alpha" = c(rnorm(3, 0, 3)),
-          "beta" = c(rnorm(1, 0, 3), NA, NA, rnorm(1, 0, 3)),
-          "cp.temp" = c(runif(3, min(dat$x_st), max(dat$x_st)))
+          "alpha" = c(stats::rnorm(3, 0, 3)),
+          "beta" = c(stats::rnorm(1, 0, 3), NA, NA, stats::rnorm(1, 0, 3)),
+          "cp.temp" = c(stats::runif(3, min(dat$x_st), max(dat$x_st)))
         )
       }
     }
@@ -611,7 +612,6 @@ model{
 #' par_est(mod)
 #'
 par_est <- function(mod) {
-
   mu_pred <- .lower <- .upper <- x <- pred_y <- lwr_95 <- upr_95 <- alpha <- cp <- sigma_g <- phi <- sigma <- mu_x <- dat <- NULL
 
   sample_draws <- mod$sample_draws
@@ -630,7 +630,7 @@ par_est <- function(mod) {
         names_to = "n",
         values_to = "mu_pred"
       ) %>%
-      dplyr::mutate(mu_pred = mu_pred*mod$scale_factor_y) %>%
+      dplyr::mutate(mu_pred = mu_pred * mod$scale_factor_y) %>%
       dplyr::mutate(n = rep(1:50, n_iter)) %>%
       dplyr::group_by(n) %>%
       tidybayes::median_qi(mu_pred) %>%
@@ -642,12 +642,16 @@ par_est <- function(mod) {
       ) %>%
       dplyr::select(x, pred_y, lwr_95, upr_95)
 
-    par_summary <- posterior::summarise_draws(sample_draws) %>% dplyr::filter(variable %in% c("alpha", "beta")) %>% mutate(mean = mean*mod$scale_factor_y,
-                                                                                                                           median = median*mod$scale_factor_y,
-                                                                                                                           sd = sd*mod$scale_factor_y,
-                                                                                                                           mad = mad*mod$scale_factor_y,
-                                                                                                                           q5 = q5*mod$scale_factor_y,
-                                                                                                                           q95 = q95*mod$scale_factor_y)
+    par_summary <- posterior::summarise_draws(sample_draws) %>%
+      dplyr::filter(variable %in% c("alpha", "beta")) %>%
+      dplyr::mutate(
+        par_mean = mean * mod$scale_factor_y,
+        par_median = median * mod$scale_factor_y,
+        par_sd = sd * mod$scale_factor_y,
+        par_mad = mad * mod$scale_factor_y,
+        par_q5 = q5 * mod$scale_factor_y,
+        par_q95 = q95 * mod$scale_factor_y
+      )
   }
 
   if (mod$model == "cp") {
@@ -658,7 +662,7 @@ par_est <- function(mod) {
         names_to = "n",
         values_to = "mu_pred"
       ) %>%
-      dplyr::mutate(mu_pred = mu_pred*mod$scale_factor_y) %>%
+      dplyr::mutate(mu_pred = mu_pred * mod$scale_factor_y) %>%
       dplyr::mutate(n = rep(1:50, n_iter)) %>%
       dplyr::group_by(n) %>%
       tidybayes::median_qi(mu_pred) %>%
@@ -720,7 +724,7 @@ par_est <- function(mod) {
     pred_var <- Sigma_star_star - Sigma_star %*% solve(Sigma, t(Sigma_star))
 
     temp <- mvtnorm::rmvnorm(n_iter, pred_mean, pred_var)
-    temp <- temp*mod$scale_factor_y
+    temp <- temp * mod$scale_factor_y
     deriv <- matrix(NA, nrow = n_iter / 2, ncol = length(jags_data$x_pred_st))
     newD <- jags_data$x_pred_st
 
@@ -739,19 +743,19 @@ par_est <- function(mod) {
       Xi <- Xp * 0
       want <- grep("x", colnames(X1))
       Xi[, want] <- Xp[, want]
-      df <- Xi %*% coef(gam_mod)
+      df <- Xi %*% stats::coef(gam_mod)
       deriv[i, ] <- c(df)
     }
-    deriv <- (deriv*mod$scale_factor_y)/mod$scale_factor_x
+    deriv <- (deriv * mod$scale_factor_y) / mod$scale_factor_x
 
     ### Store results
-    if(mod$BP_scale) deriv <- -1*deriv
-    pred_y = c(pred_mean*mod$scale_factor_y)
+    if (mod$BP_scale) deriv <- -1 * deriv
+    pred_y <- c(pred_mean * mod$scale_factor_y)
     pred_summary <- tibble::tibble(
       x = x_star * mod$scale_factor_x,
       pred_y = pred_y,
-      lwr_95 = (pred_mean - 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
-      upr_95 = (pred_mean + 1.96 * sqrt(diag(pred_var)))*mod$scale_factor_y,
+      lwr_95 = (pred_mean - 1.96 * sqrt(diag(pred_var))) * mod$scale_factor_y,
+      upr_95 = (pred_mean + 1.96 * sqrt(diag(pred_var))) * mod$scale_factor_y,
       rate_y = apply(deriv, 2, median),
       rate_lwr_95 = apply(deriv, 2, quantile, probs = 0.025),
       rate_upr_95 = apply(deriv, 2, quantile, probs = 0.975)
@@ -805,10 +809,10 @@ par_est <- function(mod) {
       K.w.inv[i, , ] <- solve(K[i, , ])
       pred[i, ] <- sample_draws$alpha[i] + K.gw[i, , ] %*% K.w.inv[i, , ] %*% w.ms[i, ]
     } # End i loop
-    pred <- pred*mod$scale_factor_y
-    w.ms <- (w.ms*mod$scale_factor_y)/mod$scale_factor_x
+    pred <- pred * mod$scale_factor_y
+    w.ms <- (w.ms * mod$scale_factor_y) / mod$scale_factor_x
 
-    if(mod$BP_scale) w.ms <- -1*w.ms
+    if (mod$BP_scale) w.ms <- -1 * w.ms
 
     ### Store results
     pred_summary <- tibble::tibble(

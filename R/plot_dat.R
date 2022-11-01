@@ -1,6 +1,7 @@
 #' Plot data with measurement uncertainty (in y and x variables)
 #'
 #' @param dat Input data with columns x,x_err,y,y_err
+#' @param BP_scale Present the data as Before Present (BP). Defaults to FALSE.
 #' @param add_truth Logical argument to add the "True" data generating process to the plot. This should only be set to True when using simulated data from sim_slr, sim_cp or sim_gp.
 #'
 #' @return Plot of data with measurement errors
@@ -24,7 +25,7 @@ plot_dat <- function(dat,
     ggplot2::theme_classic()
 
 
-  if(BP_scale) p <- p + scale_x_reverse()
+  if(BP_scale) p <- p + ggplot2::scale_x_reverse()
 
   if (add_truth) {
     return(p + ggplot2::geom_line(data = dat, ggplot2::aes(x = true_x, y = true_y, colour = "Truth"), size = 1.5) +
