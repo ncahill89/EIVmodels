@@ -825,9 +825,14 @@ par_est <- function(mod) {
       rate_upr_95 = apply(w.ms, 2, stats::quantile, probs = 0.975)
     )
 
+    mean_samps <- apply(w.ms, 1, mean)
+    w_summary <- tibble(variable = "overall_rate", mean = mean(mean_samps), median = median(mean_samps), sd = sd(mean_samps), mad = mad(mean_samps), q5 = quantile(mean_samps, 0.05), q95 = quantile(mean_samps, 0.95), rhat = NA, ess_bulk = NA, ess_tail = NA)
     par_summary <- posterior::summarise_draws(sample_draws) %>%
       dplyr::filter(variable %in% c("phi", "sigma_g", "sigma"))
+    par_summary <- rbind(par_summary, w_summary)
   }
+
+
 
   return(list(
     pred_summary = pred_summary,
